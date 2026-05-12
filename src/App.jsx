@@ -25,63 +25,108 @@ import {
 
 /* ---------- Reusable visual primitives ---------- */
 
-const Wheel = ({ size = 168, label = 'JACKPOT OF FOMO' }) => (
-  <div
-    className="relative shrink-0"
-    style={{ width: size, height: size }}
-    aria-hidden
-  >
-    {/* outer glow */}
+const Wheel = ({ size = 168, slices = 16, spin = true }) => {
+  const sliceAngle = 360 / slices;
+  return (
     <div
-      className="absolute inset-0 rounded-full blur-2xl opacity-60"
-      style={{
-        background:
-          'radial-gradient(circle, rgba(124,58,237,0.55) 0%, rgba(34,211,238,0.25) 45%, transparent 70%)',
-      }}
-    />
-    {/* gold outer ring */}
-    <div className="absolute inset-0 rounded-full gold-ring shadow-[0_0_25px_rgba(245,158,11,0.45)]" />
-    {/* inner bevel */}
-    <div className="absolute inset-[6%] rounded-full bg-[#1a1330]" />
-    {/* colored wheel */}
-    <div className="absolute inset-[9%] rounded-full wheel animate-spin-slow" />
-    {/* dot ring on gold border */}
-    <div className="absolute inset-0">
-      {Array.from({ length: 16 }).map((_, i) => {
-        const angle = (i * 360) / 16;
-        return (
-          <span
-            key={i}
-            className="absolute left-1/2 top-1/2 h-1.5 w-1.5 rounded-full bg-white/85 shadow-[0_0_6px_rgba(255,255,255,0.8)]"
-            style={{
-              transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${
-                size * 0.46
-              }px)`,
-            }}
-          />
-        );
-      })}
-    </div>
-    {/* center hub */}
-    <div className="absolute inset-[30%] rounded-full gold-ring shadow-[inset_0_2px_8px_rgba(0,0,0,0.45),0_4px_16px_rgba(0,0,0,0.45)] flex items-center justify-center">
-      <div className="text-center px-1 leading-tight">
-        <div className="font-display text-[7px] font-extrabold tracking-[0.18em] text-[#3d2a08]">
-          {label.split(' ')[0]}
-        </div>
-        <div className="font-display text-[6px] font-bold tracking-[0.22em] text-[#5b3f10] -mt-0.5">
-          {label.split(' ').slice(1).join(' ')}
+      className="relative shrink-0"
+      style={{ width: size, height: size }}
+      aria-hidden
+    >
+      {/* outer ambient glow */}
+      <div
+        className="absolute -inset-6 rounded-full blur-3xl opacity-70"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(245,158,11,0.40) 0%, rgba(168,85,247,0.22) 45%, transparent 70%)',
+        }}
+      />
+      {/* gold outer ring */}
+      <div className="absolute inset-0 rounded-full gold-ring shadow-[0_0_45px_rgba(245,158,11,0.40),inset_0_0_12px_rgba(180,83,9,0.55)]" />
+      {/* inner dark gap between ring and wheel */}
+      <div className="absolute inset-[7%] rounded-full bg-[#0c0a20]" />
+      {/* spinning ring: colored wheel + white slice dots */}
+      <div
+        className={`absolute inset-[9%] rounded-full ${spin ? 'animate-spin-slow' : ''}`}
+        style={{ transformOrigin: '50% 50%' }}
+      >
+        <div className="absolute inset-0 rounded-full wheel shadow-[inset_0_0_24px_rgba(0,0,0,0.35)]" />
+        {/* thin slice dividers */}
+        <div className="absolute inset-0 rounded-full wheel-divider opacity-60" />
+        {/* white dot in the centre of every slice */}
+        {Array.from({ length: slices }).map((_, i) => {
+          const angle = (i + 0.5) * sliceAngle;
+          const dotSize = size * 0.055;
+          const radius = size * 0.275;
+          return (
+            <span
+              key={i}
+              className="absolute left-1/2 top-1/2 rounded-full bg-white"
+              style={{
+                width: dotSize,
+                height: dotSize,
+                boxShadow:
+                  '0 0 4px rgba(255,255,255,0.85), inset 0 -1px 2px rgba(0,0,0,0.35)',
+                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${radius}px)`,
+              }}
+            />
+          );
+        })}
+      </div>
+      {/* studded dot ring on the gold border */}
+      <div className="pointer-events-none absolute inset-0">
+        {Array.from({ length: 24 }).map((_, i) => {
+          const angle = (i * 360) / 24;
+          return (
+            <span
+              key={i}
+              className="absolute left-1/2 top-1/2 rounded-full bg-amber-50"
+              style={{
+                width: size * 0.012,
+                height: size * 0.012,
+                boxShadow: '0 0 4px rgba(255, 240, 200, 0.75)',
+                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${
+                  size * 0.46
+                }px)`,
+              }}
+            />
+          );
+        })}
+      </div>
+      {/* center hub */}
+      <div className="absolute inset-[33%] rounded-full gold-ring shadow-[inset_0_2px_8px_rgba(0,0,0,0.5),0_6px_20px_rgba(0,0,0,0.6)] flex items-center justify-center">
+        <div className="text-center px-1 leading-none">
+          <div
+            className="font-display font-extrabold tracking-[0.18em] text-[#3d2a08]"
+            style={{ fontSize: size * 0.085 }}
+          >
+            WHEEL
+          </div>
+          <div
+            className="font-display font-bold tracking-[0.22em] text-[#5b3f10] mt-0.5"
+            style={{ fontSize: size * 0.062 }}
+          >
+            OF FOMO
+          </div>
         </div>
       </div>
-    </div>
-    {/* top pointer */}
-    <div className="absolute left-1/2 -translate-x-1/2 -top-1.5">
+      {/* top pointer */}
       <div
-        className="h-3 w-3 rotate-45 bg-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.8)]"
-        style={{ clipPath: 'polygon(50% 100%, 0 0, 100% 0)' }}
-      />
+        className="absolute left-1/2 -translate-x-1/2 z-20"
+        style={{ top: -size * 0.03 }}
+      >
+        <div
+          className="bg-gradient-to-b from-amber-200 to-amber-500 shadow-[0_0_14px_rgba(245,158,11,0.9)]"
+          style={{
+            width: size * 0.05,
+            height: size * 0.07,
+            clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
+          }}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /* ---------- Sidebar pieces ---------- */
 
@@ -347,13 +392,14 @@ const Sidebar = () => (
 
 /* ---------- Main grid ---------- */
 
-const GameCard = ({ jackpot, rounds, stake, slices, label = 'JACKPOT OF FOMO', tag }) => (
+const GameCard = ({ jackpot, rounds, stake, slices, tag }) => (
   <div className="card-neon group relative overflow-hidden rounded-2xl p-4">
     {/* Header */}
-    <div className="relative rounded-xl border border-white/8 bg-[#0c0c20]/80 p-2.5 text-center">
-      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
-      <div className="font-display text-[13px] font-extrabold tracking-[0.22em] text-cyan-300 neon-text">
-        JACKPOT <span className="text-white">$ {jackpot}</span>
+    <div className="relative rounded-xl border border-amber-400/15 bg-[#0c0c20]/80 p-2.5 text-center">
+      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-amber-300/60 to-transparent" />
+      <div className="font-display text-[13px] font-extrabold tracking-[0.22em]">
+        <span className="gold-text">JACKPOT</span>{' '}
+        <span className="text-white">$ {jackpot}</span>
       </div>
       <div className="mt-0.5 text-[10px] font-medium tracking-wide text-slate-400">
         {rounds} rounds to payout
@@ -361,8 +407,8 @@ const GameCard = ({ jackpot, rounds, stake, slices, label = 'JACKPOT OF FOMO', t
     </div>
 
     {/* Wheel */}
-    <div className="my-4 flex items-center justify-center">
-      <Wheel size={168} label={label} />
+    <div className="my-5 flex items-center justify-center">
+      <Wheel size={172} slices={16} />
     </div>
 
     {/* Stats */}
@@ -386,27 +432,27 @@ const GameCard = ({ jackpot, rounds, stake, slices, label = 'JACKPOT OF FOMO', t
     </div>
 
     {tag && (
-      <div className="mt-3 text-center text-[11px] font-medium tracking-wide text-slate-300/90">
+      <div className="mt-3 text-center text-[11px] font-medium tracking-wide text-amber-200/85">
         {tag}
       </div>
     )}
 
     {/* Action button */}
     <button className="btn-neon mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[12px] font-bold uppercase tracking-[0.22em]">
-      More Wheels
+      Enter Wheel
     </button>
   </div>
 );
 
 const TopBar = () => (
-  <div className="flex items-center justify-between gap-4 px-1 pb-4">
+  <div className="flex items-center justify-between gap-4 px-1 pb-5">
     <div>
       <div className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.32em] text-cyan-300/90">
         <Disc3 size={14} className="text-neon" />
         WHEELS LOBBY
       </div>
       <h1 className="mt-1 font-display text-2xl font-extrabold tracking-wide text-white">
-        Choose your <span className="violet-text">jackpot</span>
+        Choose your <span className="gold-text">jackpot</span>
       </h1>
     </div>
     <div className="hidden items-center gap-2 sm:flex">
@@ -431,6 +477,62 @@ const TopBar = () => (
   </div>
 );
 
+const HeroStat = ({ label, value, accent = 'text-white' }) => (
+  <div className="rounded-xl border border-white/8 bg-black/30 px-3 py-2.5 backdrop-blur">
+    <div className="text-[9px] font-bold uppercase tracking-[0.28em] text-slate-400">
+      {label}
+    </div>
+    <div className={`mt-1 font-display text-lg font-extrabold ${accent}`}>
+      {value}
+    </div>
+  </div>
+);
+
+const Hero = () => (
+  <section className="hero-surface relative mb-8 overflow-hidden rounded-3xl p-6 sm:p-8 lg:p-10">
+    {/* ambient blobs */}
+    <div className="pointer-events-none absolute -left-24 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-violet-600/25 blur-[140px]" />
+    <div className="pointer-events-none absolute -right-10 -top-10 h-80 w-80 rounded-full bg-amber-500/15 blur-[120px]" />
+    <div className="pointer-events-none absolute -bottom-10 left-1/3 h-60 w-[70%] rounded-full bg-magenta/15 blur-[130px]" />
+
+    <div className="relative flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:gap-10">
+      <div className="min-w-0 flex-1 text-center lg:text-left">
+        <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.32em] text-amber-200">
+          <Sparkles size={11} />
+          Live · On-Chain · Provably Fair
+        </div>
+        <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl xl:text-[3.4rem]">
+          Spin the wheel.
+          <br />
+          <span className="gold-text">Claim the jackpot.</span>
+        </h1>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400 lg:mx-0">
+          Wheel of FOMO turns every stake into a chance at a generational reward.
+          Instantly settled on-chain, audited by smart-contracts, with payouts
+          streamed to your wallet the moment the wheel stops.
+        </p>
+        <div className="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
+          <button className="btn-gold rounded-xl px-6 py-3 text-[12px] font-bold uppercase tracking-[0.24em]">
+            Spin Now
+          </button>
+          <button className="btn-neon rounded-xl px-6 py-3 text-[12px] font-bold uppercase tracking-[0.24em]">
+            How it works
+          </button>
+        </div>
+        <div className="mt-8 grid max-w-md grid-cols-3 gap-3 lg:max-w-lg">
+          <HeroStat label="Total Paid" value="$2.4M" accent="gold-text" />
+          <HeroStat label="Live Players" value="12.4K" accent="text-neon" />
+          <HeroStat label="Active Wheels" value="148" />
+        </div>
+      </div>
+
+      <div className="relative shrink-0">
+        <Wheel size={300} />
+      </div>
+    </div>
+  </section>
+);
+
 const MainContent = () => {
   const cards = [
     { jackpot: '189,888', rounds: 1000, stake: '5', slices: 25 },
@@ -444,12 +546,26 @@ const MainContent = () => {
   return (
     <main className="relative flex-1 overflow-y-auto scroll-thin p-6">
       <TopBar />
+      <Hero />
+      <div className="mb-4 flex items-center justify-between px-1">
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-[0.32em] text-slate-400">
+            Featured Wheels
+          </div>
+          <div className="mt-1 font-display text-lg font-bold text-white">
+            Pick a stake. Spin to win.
+          </div>
+        </div>
+        <button className="hidden text-[11px] font-bold uppercase tracking-[0.24em] text-cyan-300 hover:text-cyan-200 sm:inline-flex">
+          View all →
+        </button>
+      </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {cards.map((c, i) => (
           <GameCard key={i} {...c} />
         ))}
       </div>
-      <footer className="mt-8 flex items-center justify-between text-[11px] text-slate-500">
+      <footer className="mt-10 flex items-center justify-between border-t border-white/5 pt-5 text-[11px] text-slate-500">
         <span>© 2026 Wheel of FOMO · Built on-chain</span>
         <span className="flex items-center gap-1.5">
           <TrendingUp size={12} className="text-emerald-400" />
