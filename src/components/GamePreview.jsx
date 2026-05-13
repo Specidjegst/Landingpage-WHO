@@ -1,5 +1,31 @@
+import { useRef, useState } from 'react';
 import { Users, Coins, ArrowRight } from 'lucide-react';
 import Wheel from './Wheel';
+
+function useTilt(max = 7) {
+  const ref = useRef(null);
+  const [style, setStyle] = useState({});
+  const onMouseMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    const rx = (y - 0.5) * -max * 2;
+    const ry = (x - 0.5) * max * 2;
+    setStyle({
+      transform: `perspective(1100px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px) scale(1.015)`,
+      transition: 'transform 80ms ease-out',
+    });
+  };
+  const onMouseLeave = () => {
+    setStyle({
+      transform: 'perspective(1100px) rotateX(0) rotateY(0) translateY(0) scale(1)',
+      transition: 'transform 320ms ease',
+    });
+  };
+  return { ref, onMouseMove, onMouseLeave, style };
+}
 
 const wheels = [
   {
@@ -100,8 +126,15 @@ export default function GamePreview() {
 function WheelCard({ jackpot, stake, slices, players, capacity, status, tag }) {
   const meta = statusMeta[status];
   const fill = Math.round((players / capacity) * 100);
+  const tilt = useTilt(6);
   return (
-    <div className="card-neon group overflow-hidden rounded-2xl p-5">
+    <div
+      ref={tilt.ref}
+      onMouseMove={tilt.onMouseMove}
+      onMouseLeave={tilt.onMouseLeave}
+      style={{ ...tilt.style, transformStyle: 'preserve-3d', willChange: 'transform' }}
+      className="card-neon group overflow-hidden rounded-2xl p-5"
+    >
       {/* Header row */}
       <div className="flex items-center justify-between">
         <span className={meta.className}>

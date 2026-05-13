@@ -60,12 +60,12 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Card with gradient border + neon hover */
+/* Card with rotating gradient border + neon hover */
 .card-neon {
   position: relative;
   background: linear-gradient(180deg, rgba(20, 25, 60, 0.55) 0%, rgba(8, 10, 31, 0.75) 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .card-neon::before {
   content: '';
@@ -73,21 +73,41 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(0, 245, 255, 0.55), rgba(124, 58, 237, 0.25) 45%, rgba(236, 72, 153, 0.4));
+  background: conic-gradient(
+    from var(--card-angle, 0deg),
+    rgba(0, 245, 255, 0.7),
+    rgba(124, 58, 237, 0.55) 25%,
+    rgba(236, 72, 153, 0.6) 50%,
+    rgba(250, 204, 21, 0.55) 75%,
+    rgba(0, 245, 255, 0.7) 100%
+  );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  opacity: 0.18;
-  transition: opacity 0.25s ease;
+  opacity: 0.22;
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 .card-neon:hover {
-  transform: translateY(-4px);
-  border-color: rgba(0, 245, 255, 0.4);
-  box-shadow: 0 0 35px rgba(0, 245, 255, 0.18);
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(0, 245, 255, 0.5);
+  box-shadow:
+    0 22px 60px -20px rgba(0, 245, 255, 0.45),
+    0 0 50px rgba(124, 58, 237, 0.18);
 }
 .card-neon:hover::before {
-  opacity: 0.9;
+  opacity: 1;
+  animation: borderSpin 6s linear infinite;
+}
+@property --card-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes borderSpin {
+  to {
+    --card-angle: 360deg;
+  }
 }
 
 /* ---------- Buttons ---------- */
@@ -119,6 +139,27 @@ body {
     0 14px 38px -6px rgba(0, 245, 255, 0.85),
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
     0 0 30px rgba(0, 245, 255, 0.55);
+}
+
+/* Pulsing glow for headline CTAs */
+.btn-glow-pulse {
+  animation: btnGlowPulse 2.8s ease-in-out infinite;
+}
+@keyframes btnGlowPulse {
+  0%, 100% {
+    box-shadow:
+      0 10px 30px -6px rgba(0, 245, 255, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  50% {
+    box-shadow:
+      0 14px 40px -6px rgba(0, 245, 255, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 0 28px rgba(0, 245, 255, 0.55);
+  }
+}
+.btn-glow-pulse:hover {
+  animation: none;
 }
 
 .btn-ghost {

@@ -65,8 +65,12 @@ function Step({ step, icon: Icon, title, description, accent, glow }) {
   return (
     <div className="group relative">
       <div className="card-neon h-full rounded-2xl p-5">
+        {/* Big translucent step number */}
+        <span className="pointer-events-none absolute right-4 top-2 font-display text-[5.5rem] font-extrabold leading-none text-white/[0.04]">
+          0{step}
+        </span>
         <div
-          className={`relative grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${accent} ${glow} transition-transform group-hover:scale-110`}
+          className={`relative grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${accent} ${glow} transition-transform group-hover:scale-110 group-hover:rotate-3`}
         >
           <Icon size={22} className="text-white drop-shadow" />
         </div>
