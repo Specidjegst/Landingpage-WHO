@@ -1,37 +1,34 @@
-import { Target, Coins, Swords, Trophy } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Wallet, Target, Coins, Trophy } from 'lucide-react';
 
 const steps = [
   {
-    icon: Target,
-    title: 'Choose a Wheel',
+    icon: Wallet,
+    title: 'Connect your wallet',
     description:
-      'Browse live wheels, compare jackpots, stakes and slot counts. Match your risk appetite.',
+      'Connect mit Coinbase Wallet, MetaMask oder Rabby. Keine Accounts, keine Mails.',
     accent: 'from-neon to-electric',
-    glow: 'shadow-[0_0_30px_rgba(0,245,255,0.35)]',
+  },
+  {
+    icon: Target,
+    title: 'Choose a wheel',
+    description:
+      'Stake-Klasse, Slice-Anzahl, Jackpot — wähle den Raum, der zu deinem Risiko passt.',
+    accent: 'from-electric to-violet',
   },
   {
     icon: Coins,
-    title: 'Place Your Entry',
+    title: 'Buy your slice',
     description:
-      'Lock your stake on-chain. Your slot is reserved instantly — no escrow, no middlemen.',
-    accent: 'from-electric to-violet',
-    glow: 'shadow-[0_0_30px_rgba(37,99,255,0.35)]',
-  },
-  {
-    icon: Swords,
-    title: 'Compete Against Players',
-    description:
-      'When the wheel fills, all entries face off. Timing, strategy and a little FOMO decide everything.',
+      'On-chain Entry. Dein Slot ist sofort reserviert — bis zu mehrere Slices pro Round.',
     accent: 'from-violet to-magenta',
-    glow: 'shadow-[0_0_30px_rgba(124,58,237,0.35)]',
   },
   {
     icon: Trophy,
-    title: 'Spin & Claim',
+    title: 'Spin & win',
     description:
-      'The wheel spins, the winner is verifiable on-chain. Rewards are streamed to your wallet.',
+      'Wenn die Lobby voll ist, dreht sich das Wheel. Gewinn wird direkt ausgezahlt.',
     accent: 'from-magenta to-gold',
-    glow: 'shadow-[0_0_30px_rgba(236,72,153,0.35)]',
   },
 ];
 
@@ -39,53 +36,69 @@ export default function HowItWorks() {
   return (
     <section id="how" className="section-pad relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.5 }}
+          className="mx-auto max-w-2xl text-center"
+        >
           <span className="eyebrow">How it works</span>
           <h2 className="section-title mt-4">
-            Four steps. <span className="gradient-text-rainbow">One winner.</span>
+            How <span className="gradient-text-rainbow">Wheel of FOMO</span> works.
           </h2>
-          <p className="mt-4 text-sm leading-relaxed text-slate-400">
-            Wheel of FOMO is built around fast, transparent PvP rounds. No hidden
-            multipliers, no house edge stories — every result is verifiable
-            on-chain.
+          <p className="mt-4 text-sm leading-relaxed text-chalk/70">
+            Vier Schritte vom Wallet-Connect zur ersten Auszahlung. Komplett
+            on-chain. Komplett transparent.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {steps.map((s, i) => (
-            <Step key={i} step={i + 1} {...s} />
-          ))}
+        <div className="relative mt-14">
+          {/* Connecting line on desktop */}
+          <div className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-transparent via-neon/40 to-transparent lg:block" />
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+            {steps.map((s, i) => (
+              <motion.div
+                key={s.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.45, delay: i * 0.08 }}
+                className="relative"
+              >
+                {/* Step number on the line */}
+                <div className="mb-4 grid place-items-center lg:mb-6">
+                  <div
+                    className={`relative grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br ${s.accent} shadow-[0_0_30px_rgba(0,229,255,0.35)]`}
+                  >
+                    <span className="font-display text-sm font-extrabold text-white">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full bg-base px-1.5 py-0 text-[8px] font-bold uppercase tracking-[0.18em] text-chalk/60 lg:block">
+                      step
+                    </span>
+                  </div>
+                </div>
+
+                <div className="card-neon h-full rounded-2xl p-5">
+                  <div
+                    className={`grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br ${s.accent} shadow-[0_0_20px_rgba(0,229,255,0.25)]`}
+                  >
+                    <s.icon size={18} className="text-white" />
+                  </div>
+                  <h3 className="mt-4 font-display text-base font-bold text-white">
+                    {s.title}
+                  </h3>
+                  <p className="mt-2 text-[12.5px] leading-relaxed text-chalk/65">
+                    {s.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function Step({ step, icon: Icon, title, description, accent, glow }) {
-  return (
-    <div className="group relative">
-      <div className="card-neon h-full rounded-2xl p-5">
-        {/* Big translucent step number */}
-        <span className="pointer-events-none absolute right-4 top-2 font-display text-[5.5rem] font-extrabold leading-none text-white/[0.04]">
-          0{step}
-        </span>
-        <div
-          className={`relative grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${accent} ${glow} transition-transform group-hover:scale-110 group-hover:rotate-3`}
-        >
-          <Icon size={22} className="text-white drop-shadow" />
-        </div>
-        <div className="mt-5 flex items-center gap-2">
-          <span className="font-display text-xs font-bold tracking-[0.32em] text-slate-500">
-            STEP 0{step}
-          </span>
-        </div>
-        <h3 className="mt-1.5 font-display text-lg font-bold text-white">
-          {title}
-        </h3>
-        <p className="mt-2 text-[13px] leading-relaxed text-slate-400">
-          {description}
-        </p>
-      </div>
-    </div>
   );
 }

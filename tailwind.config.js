@@ -4,25 +4,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: '#080A1F',
-        deep: '#050617',
-        panel: '#0f1130',
-        neon: '#00F5FF',
-        electric: '#2563FF',
-        violet: '#7C3AED',
-        magenta: '#EC4899',
-        gold: '#FACC15',
+        // Brand surfaces
+        base: '#07071A',
+        deep: '#0A0D24',
+        panel: '#120B2E',
+        ink: '#0C0D2D',
+        // Brand neon
+        neon: '#00E5FF',
+        electric: '#2F80FF',
+        violet: '#7B2CFF',
+        magenta: '#FF3BD4',
+        gold: '#FFB800',
+        amber: '#F59E0B',
+        // Text
+        chalk: '#EAF6FF',
+        muted: '#8B93B8',
       },
       fontFamily: {
-        display: ['"Orbitron"', 'system-ui', 'sans-serif'],
-        body: ['"Inter"', 'system-ui', 'sans-serif'],
+        display: ['"Orbitron"', '"Rajdhani"', 'system-ui', 'sans-serif'],
+        body: ['"Space Grotesk"', '"Inter"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
-        neon: '0 0 18px rgba(0, 245, 255, 0.45), 0 0 4px rgba(0, 245, 255, 0.85) inset',
-        'neon-soft': '0 0 25px rgba(0, 245, 255, 0.25)',
-        violet: '0 0 25px rgba(124, 58, 237, 0.35)',
-        pink: '0 0 25px rgba(236, 72, 153, 0.35)',
-        gold: '0 0 25px rgba(250, 204, 21, 0.35)',
+        neon: '0 0 18px rgba(0, 229, 255, 0.45), 0 0 4px rgba(0, 229, 255, 0.85) inset',
+        'neon-soft': '0 0 32px rgba(0, 229, 255, 0.25)',
+        violet: '0 0 30px rgba(123, 44, 255, 0.45)',
+        pink: '0 0 30px rgba(255, 59, 212, 0.45)',
+        gold: '0 0 30px rgba(255, 184, 0, 0.4)',
       },
       animation: {
         spin: 'spin 16s linear infinite',
@@ -34,7 +42,6 @@ export default {
         'float-slow': 'float 9s ease-in-out infinite',
         marquee: 'marquee 45s linear infinite',
         'pulse-dot': 'pulseDot 1.6s ease-in-out infinite',
-        'count-up': 'fadeUp 0.6s ease-out both',
       },
       keyframes: {
         pulseGlow: {
@@ -51,11 +58,7 @@ export default {
         },
         pulseDot: {
           '0%, 100%': { opacity: 1, transform: 'scale(1)' },
-          '50%': { opacity: 0.35, transform: 'scale(0.85)' },
-        },
-        fadeUp: {
-          from: { opacity: 0, transform: 'translateY(8px)' },
-          to: { opacity: 1, transform: 'translateY(0)' },
+          '50%': { opacity: 0.35, transform: 'scale(0.8)' },
         },
       },
     },

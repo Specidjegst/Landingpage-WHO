@@ -1,221 +1,249 @@
-import { useEffect, useState } from 'react';
-import { Rocket, Play, Trophy, Activity, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  Rocket,
+  Play,
+  ShieldCheck,
+  Activity,
+  Crown,
+  Coins,
+  Disc3,
+  Globe,
+  Trophy,
+  BarChart3,
+  History,
+  LifeBuoy,
+  MessageSquare,
+} from 'lucide-react';
 import Wheel from './Wheel';
+import Logo from './Logo';
 
-function useCountUp(target, { duration = 1600, decimals = 0 } = {}) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    const start = performance.now();
-    let raf;
-    const tick = (now) => {
-      const elapsed = now - start;
-      const t = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setValue(target * eased);
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration]);
-  return value.toFixed(decimals);
-}
-
-function formatK(n) {
-  const num = Number(n);
-  if (num >= 1000) return `${(num / 1000).toFixed(num >= 10000 ? 0 : 1)}K`;
-  return `${num}`;
-}
+const trustBadges = [
+  { icon: ShieldCheck, label: 'On-Chain Verified' },
+  { icon: Globe, label: 'Base Network' },
+  { icon: Trophy, label: 'PvP Jackpot Rounds' },
+  { icon: Activity, label: 'Transparent Payouts' },
+];
 
 export default function Hero() {
-  const liveRounds = useCountUp(24);
-  const totalSpins = useCountUp(187420);
-  const pot = useCountUp(412580);
-
   return (
-    <section className="relative overflow-hidden pt-28 pb-16 sm:pt-32 lg:pt-36 lg:pb-24">
-      <div className="bg-grid pointer-events-none absolute inset-0 opacity-[0.2]" />
-      {/* Animated background orbs */}
-      <div className="pointer-events-none absolute -left-32 top-32 h-96 w-96 rounded-full bg-violet/30 blur-[140px] animate-float-slow" />
-      <div className="pointer-events-none absolute -right-10 top-40 h-[28rem] w-[28rem] rounded-full bg-neon/18 blur-[160px] animate-float" />
+    <section className="relative overflow-hidden pt-28 pb-20 sm:pt-32 lg:pt-36 lg:pb-28">
+      <div className="bg-grid pointer-events-none absolute inset-0 opacity-25" />
+      <div className="pointer-events-none absolute -left-32 top-32 h-96 w-96 rounded-full bg-violet/35 blur-[140px]" />
+      <div className="pointer-events-none absolute -right-10 top-40 h-[28rem] w-[28rem] rounded-full bg-neon/15 blur-[160px]" />
       <div className="pointer-events-none absolute -bottom-10 left-1/3 h-80 w-[60%] rounded-full bg-magenta/15 blur-[160px]" />
 
-      {/* Live winners ticker (top) */}
-      <div className="relative mb-10 overflow-hidden border-y border-white/5 bg-white/[0.02] py-2.5">
-        <div className="marquee gap-10 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.32em] text-slate-300">
-          {Array.from({ length: 2 })
-            .flatMap(() => [
-              { user: '0x8f1…c42', amount: '$2,180', tag: 'WON' },
-              { user: '0xa3b…91d', amount: '$540', tag: 'WON' },
-              { user: '0xfa7…21c', amount: '$8,920', tag: 'WON' },
-              { user: 'Round #4127', amount: '17/20 filling', tag: 'LIVE' },
-              { user: '0xc89…7d2', amount: '$1,260', tag: 'WON' },
-              { user: 'Round #4129', amount: '5/8 ending soon', tag: 'LIVE' },
-              { user: '0xe55…039', amount: '$3,470', tag: 'WON' },
-            ])
-            .map((t, i) => (
-              <span key={i} className="flex items-center gap-3 px-3">
-                <span
-                  className={`flex items-center gap-1.5 ${
-                    t.tag === 'WON' ? 'text-emerald-400' : 'text-pink-400'
-                  }`}
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-current pulse-dot" />
-                  {t.tag}
-                </span>
-                <span className="text-slate-400">{t.user}</span>
-                <span className="gold-text">{t.amount}</span>
-                <span className="text-slate-600">·</span>
-              </span>
-            ))}
-        </div>
-      </div>
-
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
-          {/* Left: copy */}
-          <div className="text-center lg:text-left">
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="text-center lg:text-left"
+          >
             <div className="eyebrow">
               <Activity size={11} className="pulse-dot" />
               Live · Base · PvP
             </div>
-            <h1 className="mt-5 font-display text-[2.75rem] font-extrabold leading-[0.95] tracking-tight text-white sm:text-[3.5rem] xl:text-[4.5rem]">
-              Spin. Compete.
+            <h1 className="mt-5 font-display text-[2.5rem] font-extrabold leading-[0.95] tracking-tight text-white sm:text-5xl xl:text-[4rem]">
+              Spin. Risk.
               <br />
-              <span className="gradient-text-rainbow">Survive the FOMO.</span>
+              <span className="gradient-text-rainbow">Win the FOMO Jackpot.</span>
             </h1>
-            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 lg:mx-0">
+            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-chalk/75 lg:mx-0">
               A <span className="font-semibold text-electric">Base-powered</span>{' '}
-              PvP wheel game where every round is a battle for timing, risk and
-              reward. No house edge stories — just degens, on-chain.
+              PvP crypto wheel game where every spin, every slice and every
+              jackpot is fully on-chain.
             </p>
-
-            {/* Live pot strip */}
-            <div className="mt-7 inline-flex items-center gap-3 rounded-2xl border border-amber-400/30 bg-amber-400/5 px-4 py-2.5 shadow-[0_0_30px_rgba(245,158,11,0.18)]">
-              <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.32em] text-amber-200">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-300 pulse-dot" />
-                Total pot live
-              </span>
-              <span className="font-display text-xl font-extrabold gold-text">
-                $ {Number(pot).toLocaleString('en-US', { maximumFractionDigits: 0 })}
-              </span>
-            </div>
-
             <div className="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <button className="btn-primary btn-glow-pulse">
+              <button className="btn-primary">
                 <Rocket size={15} />
-                Launch Game
+                Enter Lobby
               </button>
               <button className="btn-ghost">
                 <Play size={15} />
-                View Live Wheels
+                See How It Works
               </button>
             </div>
-
-            {/* Stats */}
-            <div className="mt-9 grid max-w-md grid-cols-2 gap-3 sm:max-w-2xl sm:grid-cols-4 lg:max-w-none">
-              <StatTile
-                label="Live Rounds"
-                value={Number(liveRounds).toFixed(0)}
-                accent="gradient-text-cyan"
-                icon={Activity}
-              />
-              <StatTile
-                label="Total Spins"
-                value={formatK(totalSpins)}
-                accent="gold-text"
-                icon={TrendingUp}
-              />
-              <StatTile label="Network" value="Base" accent="gradient-text-violet" />
-              <StatTile label="PvP" value="Active" accent="text-pink-400" pulse />
+            <div className="mt-7 flex flex-wrap justify-center gap-x-5 gap-y-2 lg:justify-start">
+              {trustBadges.map((b) => (
+                <span
+                  key={b.label}
+                  className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-chalk/75"
+                >
+                  <b.icon size={11} className="text-neon" />
+                  {b.label}
+                </span>
+              ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right: hero wheel */}
-          <HeroVisual />
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
+            className="relative"
+          >
+            <HeroMockup />
+          </motion.div>
         </div>
       </div>
     </section>
   );
 }
 
-function StatTile({ label, value, accent, icon: Icon, pulse }) {
+function HeroMockup() {
   return (
-    <div className="glass relative overflow-hidden rounded-xl px-3 py-3 transition hover:border-neon/40 hover:bg-white/[0.04]">
-      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-neon/40 to-transparent" />
-      <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.28em] text-slate-400">
-        {Icon && <Icon size={9} />}
-        {label}
+    <motion.div
+      animate={{ y: [0, -8, 0] }}
+      transition={{ duration: 6, ease: 'easeInOut', repeat: Infinity }}
+      className="relative mx-auto w-full max-w-2xl lg:max-w-none"
+    >
+      {/* Halo */}
+      <div className="pointer-events-none absolute -inset-10 rounded-[2rem] bg-gradient-to-br from-violet/25 via-neon/15 to-magenta/20 blur-3xl" />
+
+      {/* Browser frame */}
+      <div className="browser-frame relative overflow-hidden">
+        <div className="browser-bar flex items-center gap-2 px-4 py-3">
+          <span className="h-3 w-3 rounded-full bg-rose-500/80" />
+          <span className="h-3 w-3 rounded-full bg-amber-400/80" />
+          <span className="h-3 w-3 rounded-full bg-emerald-500/80" />
+          <div className="ml-3 hidden h-6 flex-1 rounded-md border border-white/10 bg-white/[0.04] sm:block" />
+        </div>
+
+        <div className="grid grid-cols-[110px_1fr] gap-2 p-3 sm:grid-cols-[140px_1fr_120px] sm:p-4">
+          <MiniSidebar />
+          <MiniWheels />
+          <MiniChat />
+        </div>
       </div>
-      <div
-        className={`mt-1 font-display text-2xl font-extrabold ${accent} ${
-          pulse ? 'pulse-dot' : ''
-        }`}
-      >
-        {value}
+    </motion.div>
+  );
+}
+
+function MiniSidebar() {
+  const menu = [
+    { icon: Disc3, label: 'Wheels', active: true },
+    { icon: Trophy, label: 'Tournaments' },
+    { icon: BarChart3, label: 'Statistics' },
+    { icon: History, label: 'History' },
+    { icon: LifeBuoy, label: 'Support' },
+  ];
+  return (
+    <div className="space-y-2.5 rounded-lg border border-white/5 bg-black/30 p-2.5">
+      <Logo size="sm" />
+      <div className="rounded-lg border border-white/10 bg-white/[0.03] p-2 text-[10px]">
+        <div className="flex items-center gap-1.5">
+          <div className="h-6 w-6 rounded bg-gradient-to-br from-violet to-magenta" />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1 text-white">
+              Aleksandr <Crown size={9} className="text-amber-300" />
+            </div>
+            <div className="flex items-center gap-1 text-[8px] text-chalk/60">
+              <Coins size={8} className="text-amber-300" /> 1,370
+            </div>
+          </div>
+        </div>
+      </div>
+      <button className="w-full rounded-md border border-emerald-400/40 bg-emerald-500/15 px-2 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-emerald-300">
+        + Add Balance
+      </button>
+      <div className="hidden space-y-1 sm:block">
+        {menu.map((m) => (
+          <div
+            key={m.label}
+            className={`flex items-center gap-1.5 rounded-md px-1.5 py-1 text-[10px] ${
+              m.active
+                ? 'border border-neon/30 bg-neon/10 text-neon'
+                : 'text-chalk/65'
+            }`}
+          >
+            <m.icon size={10} />
+            <span>{m.label}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function HeroVisual() {
+function MiniWheels() {
+  const wheels = [
+    { stake: '$5', slices: 25, slots: buildSlots(25, [3, 9, 17]) },
+    { stake: '$25', slices: 10, slots: buildSlots(10, [1, 4, 7]) },
+    { stake: '$50', slices: 15, slots: buildSlots(15, [2, 8, 12]) },
+  ];
   return (
-    <div className="relative mx-auto flex aspect-square w-full max-w-md items-center justify-center sm:max-w-lg lg:max-w-xl">
-      {/* Radial spotlight */}
-      <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-amber-500/15 via-violet/15 to-neon/10 blur-3xl" />
-      {/* Halo rings */}
-      <div className="pointer-events-none absolute inset-4 rounded-full border border-white/5" />
-      <div className="pointer-events-none absolute inset-12 rounded-full border border-amber-400/10" />
-      <div className="pointer-events-none absolute inset-20 rounded-full border border-white/5 animate-spin-slower" style={{ background: 'conic-gradient(from 0deg, transparent, rgba(0,245,255,0.25), transparent 40%)' }} />
+    <div className="grid grid-cols-3 gap-2">
+      {wheels.map((w, i) => (
+        <MiniWheelCard key={i} {...w} />
+      ))}
+    </div>
+  );
+}
 
-      {/* Wheel */}
-      <div className="relative">
-        <Wheel size={400} spin />
+function buildSlots(count, indices) {
+  const arr = Array.from({ length: count }, () => null);
+  indices.forEach((idx, i) => {
+    arr[idx % count] = i;
+  });
+  return arr;
+}
+
+function MiniWheelCard({ stake, slices, slots }) {
+  return (
+    <div className="card-neon overflow-hidden rounded-lg p-1.5">
+      <div className="rounded border border-neon/25 bg-gradient-to-b from-[#0e2a40]/95 to-[#0a0c1f]/95 px-1.5 py-1 text-center">
+        <div className="font-display text-[8px] font-extrabold tracking-[0.12em] text-cyan-300 neon-text">
+          JACKPOT <span className="text-white">$189K</span>
+        </div>
       </div>
+      <div className="my-2 flex items-center justify-center">
+        <Wheel size={70} slots={slots} spin showPointer={false} showHubText={false} />
+      </div>
+      <div className="grid grid-cols-2 rounded border border-white/8 bg-black/30 text-center text-[8px]">
+        <div className="border-r border-white/10 py-1">
+          <div className="text-[6px] tracking-[0.18em] text-chalk/60">STAKE</div>
+          <div className="text-[10px] font-bold text-white">{stake}</div>
+        </div>
+        <div className="py-1">
+          <div className="text-[6px] tracking-[0.18em] text-chalk/60">SLICES</div>
+          <div className="text-[10px] font-bold text-white">{slices}</div>
+        </div>
+      </div>
+      <div className="mt-1.5 rounded border border-neon/45 bg-neon/[0.04] py-1 text-center text-[7px] font-bold uppercase tracking-[0.18em] text-cyan-100">
+        More
+      </div>
+    </div>
+  );
+}
 
-      {/* Floating live-round card */}
-      <div className="absolute right-0 top-6 sm:right-2 sm:top-10 animate-float">
-        <div className="glass-strong w-48 rounded-2xl p-3 shadow-[0_18px_48px_-12px_rgba(245,158,11,0.30)]">
-          <div className="flex items-center gap-1.5 text-[9px] font-bold tracking-[0.2em] text-pink-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-pink-400 pulse-dot" />
-            LIVE ROUND #4127
-          </div>
-          <div className="mt-2 font-display text-xl font-extrabold gold-text">
-            $12,540
-          </div>
-          <div className="mt-0.5 text-[10px] text-slate-400">
-            Jackpot · 8 of 15 slots
-          </div>
-          <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/5">
+function MiniChat() {
+  const msgs = ['Big win on $200 wheel 🔥', 'lfg base!', '$50 going up', 'gn degens'];
+  return (
+    <div className="hidden rounded-lg border border-white/5 bg-black/30 p-2 sm:block">
+      <div className="flex items-center gap-1">
+        <MessageSquare size={10} className="text-magenta" />
+        <span className="font-display text-[9px] font-extrabold tracking-[0.22em] text-white">
+          DEGEN CHAT
+        </span>
+      </div>
+      <div className="mt-2 space-y-1.5">
+        {msgs.map((m, i) => (
+          <div
+            key={i}
+            className="flex items-start gap-1.5 rounded border border-white/5 bg-white/[0.02] p-1.5"
+          >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-neon to-magenta"
-              style={{ width: '53%' }}
+              className="h-3 w-3 shrink-0 rounded"
+              style={{
+                background: `linear-gradient(135deg, hsl(${i * 80}, 80%, 60%), hsl(${
+                  i * 80 + 60
+                }, 80%, 50%))`,
+              }}
             />
+            <div className="min-w-0 flex-1 truncate text-[8px] text-chalk/85">{m}</div>
           </div>
-        </div>
-      </div>
-
-      {/* Floating recent winner */}
-      <div className="absolute bottom-2 left-0 sm:bottom-10 sm:left-2 animate-float-slow">
-        <div className="glass-strong w-52 rounded-2xl p-3 shadow-[0_18px_48px_-12px_rgba(124,58,237,0.30)]">
-          <div className="flex items-center gap-1.5 text-[9px] font-bold tracking-[0.2em] text-neon">
-            <Trophy size={10} />
-            RECENT WIN
-          </div>
-          <div className="mt-1 truncate font-mono text-sm font-bold text-white">
-            0x8f1…c42
-          </div>
-          <div className="text-[10px] text-slate-400">+$2,180 · 12s ago</div>
-        </div>
-      </div>
-
-      {/* Powered by Base badge */}
-      <div className="absolute bottom-2 right-2 sm:bottom-6 sm:right-6 animate-float">
-        <div className="glass rounded-full px-3 py-1.5 backdrop-blur">
-          <div className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.22em] text-electric">
-            <span className="h-1.5 w-1.5 rounded-full bg-electric pulse-dot" />
-            POWERED BY BASE
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

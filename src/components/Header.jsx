@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Menu, X, Wallet, Rocket } from 'lucide-react';
+import Logo from './Logo';
 
 const navItems = [
-  { label: 'Game', href: '#game' },
+  { label: 'Game', href: '#wheels' },
+  { label: 'Jackpot', href: '#jackpot' },
   { label: 'How It Works', href: '#how' },
-  { label: 'Rewards', href: '#rewards' },
-  { label: 'PvP', href: '#pvp' },
+  { label: 'Tournaments', href: '#tournaments' },
   { label: 'Roadmap', href: '#roadmap' },
-  { label: 'FAQ', href: '#faq' },
 ];
 
 export default function Header() {
@@ -28,38 +28,22 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-2.5">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-neon/30 blur-md" />
-            <div className="relative grid h-9 w-9 place-items-center rounded-full gold-ring shadow-[inset_0_2px_4px_rgba(0,0,0,0.45)]">
-              <div className="h-5 w-5 rounded-full wheel" />
-            </div>
-          </div>
-          <div className="font-display leading-tight">
-            <div className="text-[14px] font-extrabold tracking-[0.2em] text-white">
-              WHEEL
-            </div>
-            <div className="-mt-0.5 text-[9px] font-bold tracking-[0.45em] text-neon/90">
-              OF FOMO
-            </div>
-          </div>
+        <a href="#" className="flex items-center" aria-label="Wheel of FOMO home">
+          <Logo size="md" />
         </a>
 
-        {/* Desktop nav */}
         <nav className="hidden items-center gap-1 lg:flex">
           {navItems.map((n) => (
             <a
               key={n.label}
               href={n.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/[0.04] hover:text-white"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-chalk/85 transition hover:bg-white/[0.04] hover:text-white"
             >
               {n.label}
             </a>
           ))}
         </nav>
 
-        {/* Actions */}
         <div className="flex items-center gap-2">
           <button className="btn-ghost btn-sm hidden sm:inline-flex">
             <Wallet size={14} />
@@ -79,7 +63,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
       <div
         className={`overflow-hidden border-t border-white/5 transition-[max-height] duration-300 lg:hidden ${
           open ? 'max-h-96' : 'max-h-0'
@@ -91,7 +74,7 @@ export default function Header() {
               key={n.label}
               href={n.href}
               onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/[0.04]"
+              className="rounded-lg px-3 py-2.5 text-sm font-medium text-chalk hover:bg-white/[0.04]"
             >
               {n.label}
             </a>
