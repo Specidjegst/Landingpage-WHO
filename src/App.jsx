@@ -1,33 +1,18 @@
-import Header from './components/Header';
-import Hero from './components/Hero';
-import GamePreview from './components/GamePreview';
-import HowItWorks from './components/HowItWorks';
-import PvPSection from './components/PvPSection';
-import BaseSection from './components/BaseSection';
-import CommunitySection from './components/CommunitySection';
-import RewardsSection from './components/RewardsSection';
-import Roadmap from './components/Roadmap';
-import FAQ from './components/FAQ';
-import FinalCTA from './components/FinalCTA';
-import Footer from './components/Footer';
+import Sidebar from './components/Sidebar';
+import DashboardMain from './components/DashboardMain';
+import DashboardChat from './components/DashboardChat';
 
 export default function App() {
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden">
-      <Header />
-      <main className="relative">
-        <Hero />
-        <GamePreview />
-        <HowItWorks />
-        <PvPSection />
-        <BaseSection />
-        <RewardsSection />
-        <CommunitySection />
-        <Roadmap />
-        <FAQ />
-        <FinalCTA />
-      </main>
-      <Footer />
+    <div className="relative flex h-screen w-screen overflow-hidden text-white">
+      {/* Ambient background blobs */}
+      <div className="pointer-events-none absolute -left-32 top-16 h-80 w-80 rounded-full bg-violet/30 blur-[120px]" />
+      <div className="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-neon/20 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-magenta/20 blur-[140px]" />
+
+      <Sidebar />
+      <DashboardMain />
+      <DashboardChat />
     </div>
   );
 }

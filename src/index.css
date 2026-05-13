@@ -254,6 +254,17 @@ body {
   text-shadow: 0 0 14px rgba(0, 245, 255, 0.6), 0 0 2px rgba(0, 245, 255, 0.9);
 }
 
+/* WHEEL OF FOMO logo lockup — cyan gradient with glow */
+.logo-text {
+  background: linear-gradient(180deg, #d8fbff 0%, #00d4ff 45%, #0e76e8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(0 0 10px rgba(0, 212, 255, 0.55))
+    drop-shadow(0 2px 4px rgba(14, 118, 232, 0.4));
+}
+
 /* ---------- Wheel (8-slice palette matching reference) ---------- */
 .wheel {
   background: conic-gradient(
