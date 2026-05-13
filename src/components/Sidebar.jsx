@@ -18,7 +18,7 @@ import Logo from './Logo';
 const menu = [
   { icon: Home, label: 'Main Lobby' },
   { icon: Disc3, label: 'Wheels', active: true },
-  { icon: Trophy, label: 'Tournaments', badge: 'LIVE' },
+  { icon: Trophy, label: 'Tournaments' },
   { icon: BarChart3, label: 'Statistics' },
   { icon: History, label: 'History' },
   { icon: LifeBuoy, label: 'Support' },
@@ -107,33 +107,25 @@ function NavItem({ icon: Icon, label, active, badge }) {
 
 function ProfileCard() {
   return (
-    <div className="glass rounded-2xl p-3">
-      <div className="flex items-center gap-3">
-        <PlayerAvatar />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
-            <span className="truncate text-sm font-semibold text-white">
-              Aleksandr
-            </span>
-            <Crown size={13} className="text-amber-300" />
-          </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-            LVL <span className="text-neon">18</span>
-            <span className="opacity-50">·</span>
-            <span>1877 XP</span>
-          </div>
-          <div className="mt-1 flex items-center gap-1.5 text-[11px]">
-            <Coins size={12} className="text-amber-300" />
-            <span className="font-semibold text-amber-200">1,370</span>
-            <span className="ml-1 h-1.5 w-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.9)]" />
-          </div>
+    <div className="glass flex items-center gap-3 rounded-2xl p-3">
+      <PlayerAvatar />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5">
+          <span className="truncate text-sm font-semibold text-white">
+            Aleksandr
+          </span>
+          <Crown size={13} className="text-amber-300" />
         </div>
-      </div>
-      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-neon via-violet to-magenta"
-          style={{ width: '62%' }}
-        />
+        <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+          LV <span className="text-neon">18</span>
+          <span className="opacity-50">·</span>
+          <span>1877</span>
+        </div>
+        <div className="mt-1 flex items-center gap-1.5 text-[11px]">
+          <Coins size={12} className="text-amber-300" />
+          <span className="font-semibold text-amber-200">1,370</span>
+          <span className="ml-1 h-1.5 w-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.9)]" />
+        </div>
       </div>
     </div>
   );

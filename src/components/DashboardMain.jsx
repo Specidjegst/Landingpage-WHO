@@ -5,23 +5,21 @@ import {
   Volume2,
   ShieldCheck,
   TrendingUp,
-  Users,
-  Coins,
 } from 'lucide-react';
 import Wheel from './Wheel';
 
 const wheels = [
-  { jackpot: '30,000', rounds: 1000, stake: 5, slices: 25, players: '18/25', status: 'filling', tag: 'Low Stake' },
-  { jackpot: '30,000', rounds: 1000, stake: 25, slices: 10, players: '7/10', status: 'live', tag: 'Mid Stake' },
-  { jackpot: '30,000', rounds: 1000, stake: 100, slices: 25, players: '19/25', status: 'ending', tag: 'High Stake' },
-  { jackpot: '30,000', rounds: 1800, stake: 10, slices: 15, players: '11/15', status: 'filling', tag: 'Low Stake' },
-  { jackpot: '30,000', rounds: 1800, stake: 50, slices: 10, players: '8/10', status: 'live', tag: 'Mid Stake' },
-  { jackpot: '30,000', rounds: 1800, stake: 200, slices: 7, players: '5/7', status: 'ending', tag: 'High Stake' },
+  { jackpot: '189,888', rounds: 1000, stake: '$5', slices: 25 },
+  { jackpot: '189,888', rounds: 1000, stake: '$25', slices: 10 },
+  { jackpot: '189,888', rounds: 1000, stake: '$10', slices: 25 },
+  { jackpot: '189,880', rounds: 1800, stake: '$50', slices: 15 },
+  { jackpot: '159,880', rounds: 1800, stake: '$100', slices: 20 },
+  { jackpot: '189,880', rounds: 1800, stake: '$200', slices: 7 },
 ];
 
 export default function DashboardMain() {
   return (
-    <main className="scroll-thin relative flex-1 overflow-y-auto p-6">
+    <main className="scroll-thin relative flex-1 overflow-y-auto px-6 py-6">
       <TopBar />
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {wheels.map((w, i) => (
@@ -80,20 +78,13 @@ function TopBar() {
   );
 }
 
-const statusMeta = {
-  live: { label: 'LIVE', cls: 'text-pink-300 bg-pink-500/10 border-pink-400/40' },
-  filling: { label: 'FILLING', cls: 'text-cyan-200 bg-cyan-400/10 border-cyan-400/40' },
-  ending: { label: 'ENDING SOON', cls: 'text-amber-200 bg-amber-400/10 border-amber-400/40' },
-};
-
-function WheelCard({ jackpot, rounds, stake, slices, players, status, tag }) {
-  const meta = statusMeta[status];
+function WheelCard({ jackpot, rounds, stake, slices }) {
   return (
     <div className="card-neon group overflow-hidden rounded-2xl p-4">
-      {/* Jackpot header */}
-      <div className="relative overflow-hidden rounded-xl border border-cyan-400/20 bg-gradient-to-b from-[#0d2a3f]/90 to-[#0c0c20]/90 p-3 text-center">
+      {/* Cyan JACKPOT header */}
+      <div className="relative overflow-hidden rounded-xl border border-cyan-400/25 bg-gradient-to-b from-[#0e2a40]/95 to-[#0a0c1f]/95 p-3 text-center">
         <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent" />
-        <div className="font-display text-[13px] font-extrabold tracking-[0.18em] text-cyan-300 neon-text sm:text-[14px]">
+        <div className="font-display text-[14px] font-extrabold tracking-[0.16em] text-cyan-300 neon-text">
           JACKPOT <span className="text-white">$ {jackpot}</span>
         </div>
         <div className="mt-0.5 text-[10px] font-medium tracking-wide text-slate-400">
@@ -101,49 +92,35 @@ function WheelCard({ jackpot, rounds, stake, slices, players, status, tag }) {
         </div>
       </div>
 
-      {/* Status + tag */}
-      <div className="mt-3 flex items-center justify-between">
-        <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[9px] font-bold tracking-[0.22em] ${meta.cls}`}>
-          {status !== 'ending' && (
-            <span className="h-1.5 w-1.5 rounded-full bg-current pulse-dot" />
-          )}
-          {meta.label}
-        </span>
-        <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
-          {tag}
-        </span>
-      </div>
-
       {/* Wheel */}
       <div className="my-4 flex items-center justify-center">
-        <Wheel size={170} slices={slices} spin />
+        <Wheel size={180} slices={slices} spin />
       </div>
 
-      {/* Stats row */}
-      <div className="grid grid-cols-3 gap-2 rounded-xl border border-white/8 bg-black/30 p-2.5">
-        <Stat icon={Coins} label="STAKE" value={`$${stake}`} />
-        <Stat label="SLICES" value={slices} divider />
-        <Stat icon={Users} label="PLAYERS" value={players} />
+      {/* 2-column stats with divider */}
+      <div className="grid grid-cols-2 rounded-xl border border-white/8 bg-black/30">
+        <div className="border-r border-white/10 px-3 py-3 text-center">
+          <div className="text-[10px] font-bold uppercase tracking-[0.28em] text-slate-400">
+            STAKE
+          </div>
+          <div className="mt-1 font-display text-base font-bold text-white">
+            {stake}
+          </div>
+        </div>
+        <div className="px-3 py-3 text-center">
+          <div className="text-[10px] font-bold uppercase tracking-[0.28em] text-slate-400">
+            SLICES
+          </div>
+          <div className="mt-1 font-display text-base font-bold text-white">
+            {slices}
+          </div>
+        </div>
       </div>
 
-      {/* Action */}
-      <button className="btn-ghost mt-3 w-full !border-cyan-400/45 !bg-cyan-400/[0.04] !text-cyan-100 hover:!bg-cyan-400/10 hover:!shadow-[0_0_24px_rgba(0,245,255,0.25)]">
-        Enter Wheel
+      {/* More Wheels button — cyan outlined pill */}
+      <button className="mt-3 flex w-full items-center justify-center rounded-xl border border-cyan-400/55 bg-cyan-400/[0.04] py-2.5 text-[12px] font-bold uppercase tracking-[0.22em] text-cyan-100 transition hover:bg-cyan-400/10 hover:shadow-[0_0_24px_rgba(0,245,255,0.30)]">
+        More Wheels
       </button>
-    </div>
-  );
-}
-
-function Stat({ icon: Icon, label, value, divider }) {
-  return (
-    <div className={`text-center ${divider ? 'border-x border-white/8' : ''}`}>
-      <div className="flex items-center justify-center gap-1 text-[9px] font-bold uppercase tracking-[0.22em] text-slate-400">
-        {Icon && <Icon size={9} />}
-        {label}
-      </div>
-      <div className="mt-0.5 font-display text-[15px] font-bold text-white">
-        {value}
-      </div>
     </div>
   );
 }

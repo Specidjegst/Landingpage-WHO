@@ -1,4 +1,4 @@
-// 20-stop full-spectrum rainbow that loops cleanly (matches the reference artwork)
+// 20-stop full-spectrum rainbow at 82% saturation / 55% lightness
 const DEFAULT_COLORS = Array.from({ length: 20 }, (_, i) => {
   const h = (i / 20) * 360;
   return `hsl(${h}, 82%, 55%)`;
@@ -9,6 +9,8 @@ export default function Wheel({
   slices = 20,
   spin = false,
   showPointer = true,
+  showDots = true,
+  showHubText = true,
   colors = DEFAULT_COLORS,
 }) {
   const sliceAngle = 360 / slices;
@@ -21,6 +23,10 @@ export default function Wheel({
     })
     .join(', ');
   const wheelStyle = { background: `conic-gradient(from 0deg, ${stops})` };
+  const dotRadius = size * 0.29;
+  const sliceArc = (Math.PI * 2 * dotRadius) / slices;
+  const dotSize = Math.min(size * 0.07, sliceArc * 0.55);
+  const dotsVisible = showDots && dotSize >= 3;
 
   return (
     <div
@@ -30,7 +36,7 @@ export default function Wheel({
     >
       {/* Warm rainbow ambient glow */}
       <div
-        className="absolute -inset-6 rounded-full blur-3xl opacity-70"
+        className="absolute -inset-6 rounded-full blur-3xl opacity-65"
         style={{
           background:
             'radial-gradient(circle, rgba(250,204,21,0.28) 0%, rgba(168,85,247,0.22) 50%, transparent 72%)',
@@ -50,7 +56,7 @@ export default function Wheel({
         }}
       />
 
-      {/* Spinning ring: slice fill only */}
+      {/* Slice fill + dots */}
       <div
         className={`absolute rounded-full ${spin ? 'animate-spin-slower' : ''}`}
         style={{ inset: '8.5%', transformOrigin: '50% 50%' }}
@@ -66,12 +72,32 @@ export default function Wheel({
             background: `repeating-conic-gradient(from 0deg, rgba(0,0,0,0.55) 0deg 0.5deg, transparent 0.5deg ${sliceAngle}deg)`,
           }}
         />
+        {/* White dot in each slice */}
+        {dotsVisible &&
+          Array.from({ length: slices }).map((_, i) => {
+            const angle = (i + 0.5) * sliceAngle;
+            return (
+              <span
+                key={i}
+                className="absolute left-1/2 top-1/2 rounded-full"
+                style={{
+                  width: dotSize,
+                  height: dotSize,
+                  background:
+                    'radial-gradient(circle at 35% 30%, #ffffff 0%, #ffffff 60%, #d4d4d8 100%)',
+                  boxShadow:
+                    '0 1px 3px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(0,0,0,0.20)',
+                  transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${dotRadius}px)`,
+                }}
+              />
+            );
+          })}
       </div>
 
       {/* Dark bronze studs on the gold rim */}
       <div className="pointer-events-none absolute inset-0">
         {Array.from({ length: 8 }).map((_, i) => {
-          const angle = (i * 360) / 8 + 22.5; // offset so they don't sit on top pointer
+          const angle = (i * 360) / 8 + 22.5;
           const studSize = size * 0.018;
           return (
             <span
@@ -92,9 +118,9 @@ export default function Wheel({
         })}
       </div>
 
-      {/* Center hub — pressed amber disc with embossed gear icon */}
+      {/* Center hub — pressed amber disc */}
       <div
-        className="absolute flex items-center justify-center rounded-full"
+        className="absolute flex flex-col items-center justify-center rounded-full"
         style={{
           inset: '29%',
           background:
@@ -104,12 +130,26 @@ export default function Wheel({
           border: '1.5px solid rgba(120, 70, 20, 0.85)',
         }}
       >
-        <div
-          className="grid place-items-center"
-          style={{ width: size * 0.22, height: size * 0.22 }}
-        >
-          <CenterGear size={size * 0.22} />
-        </div>
+        {showHubText ? (
+          <>
+            <HubText size={size * 0.105}>WHEEL</HubText>
+            <div
+              className="my-[1px] grid place-items-center"
+              style={{ width: size * 0.062, height: size * 0.062 }}
+            >
+              <CenterGear size={size * 0.062} />
+            </div>
+            <HubText size={size * 0.065}>OF</HubText>
+            <HubText size={size * 0.105}>FOMO</HubText>
+          </>
+        ) : (
+          <div
+            className="grid place-items-center"
+            style={{ width: size * 0.22, height: size * 0.22 }}
+          >
+            <CenterGear size={size * 0.22} />
+          </div>
+        )}
       </div>
 
       {/* Top pointer */}
@@ -132,6 +172,23 @@ export default function Wheel({
   );
 }
 
+function HubText({ children, size }) {
+  return (
+    <div
+      className="font-display font-extrabold tracking-[0.06em]"
+      style={{
+        fontSize: size,
+        lineHeight: 1,
+        color: '#6b3a10',
+        textShadow:
+          '0 1px 0 rgba(255, 230, 180, 0.55), 0 -1px 0 rgba(50, 25, 5, 0.55)',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function CenterGear({ size }) {
   return (
     <svg
@@ -139,17 +196,17 @@ function CenterGear({ size }) {
       height={size}
       viewBox="0 0 20 20"
       fill="none"
-      style={{ filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.35))' }}
+      style={{ filter: 'drop-shadow(0 1px 0 rgba(255,230,180,0.45))' }}
     >
       <circle
         cx="10"
         cy="10"
         r="7.5"
-        stroke="#3a1f04"
+        stroke="#6b3a10"
         strokeWidth="1.5"
         fill="none"
       />
-      <circle cx="10" cy="10" r="2" fill="#3a1f04" />
+      <circle cx="10" cy="10" r="2" fill="#6b3a10" />
       {Array.from({ length: 8 }).map((_, i) => {
         const angle = (i * Math.PI * 2) / 8;
         const x1 = 10 + Math.cos(angle) * 3.2;
@@ -163,7 +220,7 @@ function CenterGear({ size }) {
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke="#3a1f04"
+            stroke="#6b3a10"
             strokeWidth="1.2"
             strokeLinecap="round"
           />
