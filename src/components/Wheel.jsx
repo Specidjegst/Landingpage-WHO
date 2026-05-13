@@ -1,25 +1,8 @@
-const DEFAULT_COLORS = [
-  '#ef4444', // red
-  '#f97316', // orange
-  '#fb923c', // light orange
-  '#facc15', // yellow
-  '#eab308', // amber
-  '#a3e635', // lime
-  '#65a30d', // dark lime
-  '#22c55e', // green
-  '#14b8a6', // teal
-  '#06b6d4', // cyan
-  '#22d3ee', // light cyan
-  '#0ea5e9', // sky
-  '#3b82f6', // blue
-  '#6366f1', // indigo
-  '#8b5cf6', // violet
-  '#a855f7', // purple
-  '#d946ef', // fuchsia
-  '#ec4899', // pink
-  '#f43f5e', // rose
-  '#fb7185', // light rose
-];
+// 20-stop full-spectrum rainbow that loops cleanly (matches the reference artwork)
+const DEFAULT_COLORS = Array.from({ length: 20 }, (_, i) => {
+  const h = (i / 20) * 360;
+  return `hsl(${h}, 82%, 55%)`;
+});
 
 export default function Wheel({
   size = 168,
@@ -29,7 +12,6 @@ export default function Wheel({
   colors = DEFAULT_COLORS,
 }) {
   const sliceAngle = 360 / slices;
-  // Sample the rainbow evenly across the slice count so any value (8, 10, 15, 20, 25) looks balanced
   const stops = Array.from({ length: slices })
     .map((_, i) => {
       const c = colors[Math.floor((i * colors.length) / slices) % colors.length];
@@ -39,9 +21,9 @@ export default function Wheel({
     })
     .join(', ');
   const wheelStyle = { background: `conic-gradient(from 0deg, ${stops})` };
-  const radius = size * 0.28;
+  const radius = size * 0.29;
   const sliceArc = (Math.PI * 2 * radius) / slices;
-  const dotSize = Math.min(size * 0.075, sliceArc * 0.55);
+  const dotSize = Math.min(size * 0.07, sliceArc * 0.55);
   const showDots = dotSize >= 3;
 
   return (
@@ -52,40 +34,40 @@ export default function Wheel({
     >
       {/* Warm rainbow ambient glow */}
       <div
-        className="absolute -inset-6 rounded-full blur-3xl opacity-65"
+        className="absolute -inset-6 rounded-full blur-3xl opacity-70"
         style={{
           background:
-            'radial-gradient(circle, rgba(250,204,21,0.30) 0%, rgba(168,85,247,0.25) 50%, transparent 72%)',
+            'radial-gradient(circle, rgba(250,204,21,0.28) 0%, rgba(168,85,247,0.22) 50%, transparent 72%)',
         }}
       />
 
       {/* Gold outer ring */}
-      <div className="absolute inset-0 rounded-full gold-ring shadow-[0_0_50px_rgba(245,158,11,0.40),inset_0_0_14px_rgba(180,83,9,0.55)]" />
+      <div className="absolute inset-0 rounded-full gold-ring shadow-[0_0_55px_rgba(245,158,11,0.40),inset_0_0_14px_rgba(120,60,15,0.6)]" />
 
-      {/* Inner shadow ring on the gold to add depth */}
+      {/* Inner dark seam between gold ring and slices */}
       <div
         className="absolute rounded-full"
         style={{
-          inset: '6%',
+          inset: '6.5%',
           boxShadow:
-            'inset 0 0 0 2px rgba(58, 37, 16, 0.55), inset 0 4px 10px rgba(0,0,0,0.35)',
+            'inset 0 0 0 2px rgba(58, 37, 16, 0.6), inset 0 4px 10px rgba(0,0,0,0.4)',
         }}
       />
 
-      {/* Spinning ring: colored wheel + slice dots */}
+      {/* Spinning ring: slice fill + dots */}
       <div
         className={`absolute rounded-full ${spin ? 'animate-spin-slower' : ''}`}
-        style={{ inset: '8%', transformOrigin: '50% 50%' }}
+        style={{ inset: '8.5%', transformOrigin: '50% 50%' }}
       >
         <div
-          className="absolute inset-0 rounded-full shadow-[inset_0_0_24px_rgba(0,0,0,0.35)]"
+          className="absolute inset-0 rounded-full shadow-[inset_0_0_24px_rgba(0,0,0,0.4)]"
           style={wheelStyle}
         />
         {/* Dark seams between slices */}
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background: `repeating-conic-gradient(from 0deg, rgba(0,0,0,0.45) 0deg 0.5deg, transparent 0.5deg ${sliceAngle}deg)`,
+            background: `repeating-conic-gradient(from 0deg, rgba(0,0,0,0.55) 0deg 0.5deg, transparent 0.5deg ${sliceAngle}deg)`,
           }}
         />
         {/* White dot in each slice */}
@@ -102,7 +84,7 @@ export default function Wheel({
                   background:
                     'radial-gradient(circle at 35% 30%, #ffffff 0%, #ffffff 60%, #d4d4d8 100%)',
                   boxShadow:
-                    '0 1px 3px rgba(0,0,0,0.40), inset 0 -1px 2px rgba(0,0,0,0.20)',
+                    '0 1px 3px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(0,0,0,0.2)',
                   transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${radius}px)`,
                 }}
               />
@@ -112,9 +94,9 @@ export default function Wheel({
 
       {/* Dark bronze studs on the gold rim */}
       <div className="pointer-events-none absolute inset-0">
-        {Array.from({ length: 12 }).map((_, i) => {
-          const angle = (i * 360) / 12;
-          const studSize = size * 0.016;
+        {Array.from({ length: 8 }).map((_, i) => {
+          const angle = (i * 360) / 8 + 22.5; // offset so they don't sit on top pointer
+          const studSize = size * 0.018;
           return (
             <span
               key={i}
@@ -123,8 +105,8 @@ export default function Wheel({
                 width: studSize,
                 height: studSize,
                 background:
-                  'radial-gradient(circle at 35% 30%, #d2691e 0%, #8b4513 60%, #4a2c0a 100%)',
-                boxShadow: 'inset 0 -1px 1px rgba(0,0,0,0.55)',
+                  'radial-gradient(circle at 35% 30%, #8b4513 0%, #4a2c0a 70%, #2a1604 100%)',
+                boxShadow: 'inset 0 -1px 1px rgba(0,0,0,0.6)',
                 transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${
                   size * 0.46
                 }px)`,
@@ -134,11 +116,11 @@ export default function Wheel({
         })}
       </div>
 
-      {/* Center hub: pressed amber disc */}
+      {/* Center hub — pressed amber disc with 4-line text (WHEEL / icon / OF / FOMO) */}
       <div
         className="absolute flex flex-col items-center justify-center rounded-full"
         style={{
-          inset: '30%',
+          inset: '29%',
           background:
             'radial-gradient(circle at 30% 25%, #f4d18a 0%, #e0a04d 40%, #a36523 100%)',
           boxShadow:
@@ -146,34 +128,15 @@ export default function Wheel({
           border: '1.5px solid rgba(120, 70, 20, 0.85)',
         }}
       >
+        <HubText size={size * 0.105}>WHEEL</HubText>
         <div
-          className="font-display font-extrabold tracking-[0.08em] text-[#3a1f04]"
-          style={{
-            fontSize: size * 0.095,
-            lineHeight: 1,
-            textShadow:
-              '0 1px 0 rgba(255,255,255,0.35), 0 -1px 0 rgba(0,0,0,0.35)',
-          }}
+          className="my-[1px] grid place-items-center"
+          style={{ width: size * 0.065, height: size * 0.065 }}
         >
-          WHEEL
+          <CenterGear size={size * 0.065} />
         </div>
-        <div
-          className="my-0.5 grid place-items-center"
-          style={{ width: size * 0.07, height: size * 0.07 }}
-        >
-          <CenterGear size={size * 0.07} />
-        </div>
-        <div
-          className="font-display font-extrabold tracking-[0.06em] text-[#3a1f04]"
-          style={{
-            fontSize: size * 0.08,
-            lineHeight: 1,
-            textShadow:
-              '0 1px 0 rgba(255,255,255,0.35), 0 -1px 0 rgba(0,0,0,0.35)',
-          }}
-        >
-          OF FOMO
-        </div>
+        <HubText size={size * 0.07}>OF</HubText>
+        <HubText size={size * 0.105}>FOMO</HubText>
       </div>
 
       {/* Top pointer */}
@@ -186,12 +149,28 @@ export default function Wheel({
             className="bg-gradient-to-b from-amber-200 to-amber-600 shadow-[0_0_14px_rgba(245,158,11,0.9)]"
             style={{
               width: size * 0.055,
-              height: size * 0.08,
+              height: size * 0.085,
               clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
             }}
           />
         </div>
       )}
+    </div>
+  );
+}
+
+function HubText({ children, size }) {
+  return (
+    <div
+      className="font-display font-extrabold tracking-[0.06em] text-[#3a1f04]"
+      style={{
+        fontSize: size,
+        lineHeight: 1,
+        textShadow:
+          '0 1px 0 rgba(255,255,255,0.4), 0 -1px 0 rgba(0,0,0,0.4)',
+      }}
+    >
+      {children}
     </div>
   );
 }
@@ -208,18 +187,18 @@ function CenterGear({ size }) {
       <circle
         cx="10"
         cy="10"
-        r="8"
+        r="7.5"
         stroke="#3a1f04"
-        strokeWidth="1.6"
+        strokeWidth="1.5"
         fill="none"
       />
-      <circle cx="10" cy="10" r="1.8" fill="#3a1f04" />
+      <circle cx="10" cy="10" r="2" fill="#3a1f04" />
       {Array.from({ length: 8 }).map((_, i) => {
         const angle = (i * Math.PI * 2) / 8;
         const x1 = 10 + Math.cos(angle) * 3.2;
         const y1 = 10 + Math.sin(angle) * 3.2;
-        const x2 = 10 + Math.cos(angle) * 7.2;
-        const y2 = 10 + Math.sin(angle) * 7.2;
+        const x2 = 10 + Math.cos(angle) * 7;
+        const y2 = 10 + Math.sin(angle) * 7;
         return (
           <line
             key={i}
