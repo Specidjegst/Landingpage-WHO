@@ -1,32 +1,48 @@
-// 20-stop full-spectrum rainbow at 82% saturation / 55% lightness
-const DEFAULT_COLORS = Array.from({ length: 20 }, (_, i) => {
-  const h = (i / 20) * 360;
-  return `hsl(${h}, 82%, 55%)`;
-});
+const EMPTY_SLICE = '#13112e';
+
+// Player palettes — each filled slot picks one. Colour stays consistent
+// with the avatar so the slice clearly "belongs" to that player.
+export const PLAYER_PALETTES = [
+  { color: '#ec4899', from: '#ec4899', to: '#a855f7' }, // pink → violet
+  { color: '#f59e0b', from: '#f59e0b', to: '#dc2626' }, // amber → red
+  { color: '#22d3ee', from: '#22d3ee', to: '#3b82f6' }, // cyan → blue
+  { color: '#22c55e', from: '#22c55e', to: '#84cc16' }, // green → lime
+  { color: '#8b5cf6', from: '#8b5cf6', to: '#ec4899' }, // violet → pink
+  { color: '#f97316', from: '#f97316', to: '#facc15' }, // orange → yellow
+  { color: '#06b6d4', from: '#06b6d4', to: '#a855f7' }, // cyan → purple
+  { color: '#f43f5e', from: '#f43f5e', to: '#fb923c' }, // rose → orange
+];
 
 export default function Wheel({
   size = 168,
-  slices = 20,
+  slots,
+  slices,
   spin = false,
   showPointer = true,
-  showDots = true,
   showHubText = true,
-  colors = DEFAULT_COLORS,
 }) {
-  const sliceAngle = 360 / slices;
-  const stops = Array.from({ length: slices })
-    .map((_, i) => {
-      const c = colors[Math.floor((i * colors.length) / slices) % colors.length];
+  // slots: array of paletteIndex | null  (null = empty slot)
+  const slotArr =
+    slots ?? Array.from({ length: slices ?? 8 }, () => null);
+  const count = slotArr.length;
+  const sliceAngle = 360 / count;
+
+  const stops = slotArr
+    .map((slot, i) => {
+      const color =
+        slot != null ? PLAYER_PALETTES[slot % PLAYER_PALETTES.length].color : EMPTY_SLICE;
       const from = (i * sliceAngle).toFixed(3);
       const to = ((i + 1) * sliceAngle).toFixed(3);
-      return `${c} ${from}deg ${to}deg`;
+      return `${color} ${from}deg ${to}deg`;
     })
     .join(', ');
+
   const wheelStyle = { background: `conic-gradient(from 0deg, ${stops})` };
-  const dotRadius = size * 0.29;
-  const sliceArc = (Math.PI * 2 * dotRadius) / slices;
-  const dotSize = Math.min(size * 0.07, sliceArc * 0.55);
-  const dotsVisible = showDots && dotSize >= 3;
+
+  const avatarRadius = size * 0.31;
+  const sliceArc = (Math.PI * 2 * avatarRadius) / count;
+  const avatarSize = Math.min(size * 0.13, sliceArc * 0.7);
+  const showAvatars = avatarSize >= 10;
 
   return (
     <div
@@ -34,12 +50,12 @@ export default function Wheel({
       style={{ width: size, height: size }}
       aria-hidden
     >
-      {/* Warm rainbow ambient glow */}
+      {/* Multi-colour ambient glow (rainbow halo behind the wheel) */}
       <div
-        className="absolute -inset-6 rounded-full blur-3xl opacity-65"
+        className="absolute -inset-6 rounded-full blur-3xl opacity-70"
         style={{
           background:
-            'radial-gradient(circle, rgba(250,204,21,0.28) 0%, rgba(168,85,247,0.22) 50%, transparent 72%)',
+            'conic-gradient(from 0deg, rgba(236,72,153,0.35), rgba(245,158,11,0.28), rgba(34,197,94,0.25), rgba(0,212,255,0.30), rgba(124,58,237,0.32), rgba(236,72,153,0.35))',
         }}
       />
 
@@ -56,40 +72,40 @@ export default function Wheel({
         }}
       />
 
-      {/* Slice fill + dots */}
+      {/* Spinning ring: slice fill + player avatars */}
       <div
         className={`absolute rounded-full ${spin ? 'animate-spin-slower' : ''}`}
         style={{ inset: '8.5%', transformOrigin: '50% 50%' }}
       >
         <div
-          className="absolute inset-0 rounded-full shadow-[inset_0_0_24px_rgba(0,0,0,0.4)]"
+          className="absolute inset-0 rounded-full shadow-[inset_0_0_24px_rgba(0,0,0,0.55)]"
           style={wheelStyle}
         />
         {/* Dark seams between slices */}
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background: `repeating-conic-gradient(from 0deg, rgba(0,0,0,0.55) 0deg 0.5deg, transparent 0.5deg ${sliceAngle}deg)`,
+            background: `repeating-conic-gradient(from 0deg, rgba(0,0,0,0.65) 0deg 0.5deg, transparent 0.5deg ${sliceAngle}deg)`,
           }}
         />
-        {/* White dot in each slice */}
-        {dotsVisible &&
-          Array.from({ length: slices }).map((_, i) => {
+        {/* Player avatar in each filled slot */}
+        {showAvatars &&
+          slotArr.map((slot, i) => {
+            if (slot == null) return null;
+            const palette = PLAYER_PALETTES[slot % PLAYER_PALETTES.length];
             const angle = (i + 0.5) * sliceAngle;
             return (
-              <span
+              <div
                 key={i}
-                className="absolute left-1/2 top-1/2 rounded-full"
+                className="absolute left-1/2 top-1/2"
                 style={{
-                  width: dotSize,
-                  height: dotSize,
-                  background:
-                    'radial-gradient(circle at 35% 30%, #ffffff 0%, #ffffff 60%, #d4d4d8 100%)',
-                  boxShadow:
-                    '0 1px 3px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(0,0,0,0.20)',
-                  transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${dotRadius}px)`,
+                  width: avatarSize,
+                  height: avatarSize,
+                  transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${avatarRadius}px)`,
                 }}
-              />
+              >
+                <PlayerAvatar palette={palette} size={avatarSize} seed={i} />
+              </div>
             );
           })}
       </div>
@@ -198,14 +214,7 @@ function CenterGear({ size }) {
       fill="none"
       style={{ filter: 'drop-shadow(0 1px 0 rgba(255,230,180,0.45))' }}
     >
-      <circle
-        cx="10"
-        cy="10"
-        r="7.5"
-        stroke="#6b3a10"
-        strokeWidth="1.5"
-        fill="none"
-      />
+      <circle cx="10" cy="10" r="7.5" stroke="#6b3a10" strokeWidth="1.5" fill="none" />
       <circle cx="10" cy="10" r="2" fill="#6b3a10" />
       {Array.from({ length: 8 }).map((_, i) => {
         const angle = (i * Math.PI * 2) / 8;
@@ -226,6 +235,42 @@ function CenterGear({ size }) {
           />
         );
       })}
+    </svg>
+  );
+}
+
+function PlayerAvatar({ palette, size, seed = 0 }) {
+  const id = `pa-${seed}-${palette.color.slice(1)}`;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 32 32"
+      style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.45))' }}
+    >
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={palette.from} />
+          <stop offset="100%" stopColor={palette.to} />
+        </linearGradient>
+      </defs>
+      <circle
+        cx="16"
+        cy="16"
+        r="14.5"
+        fill={`url(#${id})`}
+        stroke="white"
+        strokeWidth="2"
+      />
+      <circle cx="12" cy="14" r="1.8" fill="#0f0f1b" />
+      <circle cx="20" cy="14" r="1.8" fill="#0f0f1b" />
+      <path
+        d="M11 20 Q16 24 21 20"
+        stroke="#0f0f1b"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        fill="none"
+      />
     </svg>
   );
 }

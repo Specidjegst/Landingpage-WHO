@@ -1,20 +1,20 @@
 export default function Logo({ size = 'md', className = '' }) {
   const sizes = {
-    sm: { wheelTxt: 'text-[15px]', ofTxt: 'text-[15px]', tracking: 'tracking-[0.14em]', gap: 'gap-1.5', gear: 14 },
-    md: { wheelTxt: 'text-xl', ofTxt: 'text-xl', tracking: 'tracking-[0.14em]', gap: 'gap-2', gear: 18 },
-    lg: { wheelTxt: 'text-3xl', ofTxt: 'text-3xl', tracking: 'tracking-[0.12em]', gap: 'gap-2.5', gear: 26 },
+    sm: { txt: 'text-[15px]', tracking: 'tracking-[0.12em]', gap: 'gap-1', smallGap: '-mx-px', gear: 14 },
+    md: { txt: 'text-xl', tracking: 'tracking-[0.12em]', gap: 'gap-1', smallGap: '-mx-px', gear: 20 },
+    lg: { txt: 'text-3xl', tracking: 'tracking-[0.1em]', gap: 'gap-1.5', smallGap: '-mx-0.5', gear: 30 },
   };
   const s = sizes[size] ?? sizes.md;
   return (
     <div className={`inline-flex items-center ${s.gap} ${className}`}>
-      <span className={`font-display font-extrabold ${s.tracking} ${s.wheelTxt} logo-text`}>
+      <span className={`font-display font-extrabold ${s.tracking} ${s.txt} logo-text`}>
         WHEEL
       </span>
-      <span className={`grid place-items-center logo-text`}>
+      <span className="ml-1.5 grid place-items-center logo-text">
         <LogoGear size={s.gear} />
       </span>
-      <span className={`font-display font-extrabold ${s.tracking} ${s.ofTxt} logo-text`}>
-        OF FOMO
+      <span className={`font-display font-extrabold ${s.tracking} ${s.txt} logo-text`}>
+        F&nbsp;FOMO
       </span>
     </div>
   );
@@ -22,16 +22,11 @@ export default function Logo({ size = 'md', className = '' }) {
 
 function LogoGear({ size }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-    >
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <defs>
         <linearGradient id="lgg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#9ff5ff" />
+          <stop offset="0%" stopColor="#d8fbff" />
+          <stop offset="50%" stopColor="#00d4ff" />
           <stop offset="100%" stopColor="#0e76e8" />
         </linearGradient>
       </defs>

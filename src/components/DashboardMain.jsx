@@ -1,26 +1,91 @@
-import {
-  Disc3,
-  Search,
-  Bell,
-  Volume2,
-  ShieldCheck,
-  TrendingUp,
-} from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import Wheel from './Wheel';
 
+// Build a wheel: slices total, with a list of [sliceIndex, playerPaletteIndex]
+// entries indicating which slots are already taken by players.
+function makeWheel(slices, players) {
+  const arr = Array.from({ length: slices }, () => null);
+  players.forEach(([i, p]) => {
+    arr[((i % slices) + slices) % slices] = p;
+  });
+  return arr;
+}
+
 const wheels = [
-  { jackpot: '189,888', rounds: 1000, stake: '$5', slices: 25 },
-  { jackpot: '189,888', rounds: 1000, stake: '$25', slices: 10 },
-  { jackpot: '189,888', rounds: 1000, stake: '$10', slices: 25 },
-  { jackpot: '189,880', rounds: 1800, stake: '$50', slices: 15 },
-  { jackpot: '159,880', rounds: 1800, stake: '$100', slices: 20 },
-  { jackpot: '189,880', rounds: 1800, stake: '$200', slices: 7 },
+  {
+    jackpot: '189,888',
+    rounds: 1000,
+    stake: '$5',
+    slots: makeWheel(25, [
+      [2, 0],
+      [7, 2],
+      [11, 5],
+      [16, 3],
+      [21, 1],
+    ]),
+  },
+  {
+    jackpot: '189,888',
+    rounds: 1000,
+    stake: '$25',
+    slots: makeWheel(10, [
+      [1, 0],
+      [3, 4],
+      [6, 2],
+      [8, 5],
+    ]),
+  },
+  {
+    jackpot: '189,888',
+    rounds: 1000,
+    stake: '$10',
+    slots: makeWheel(25, [
+      [3, 1],
+      [8, 3],
+      [12, 6],
+      [17, 0],
+      [22, 5],
+    ]),
+  },
+  {
+    jackpot: '189,880',
+    rounds: 1800,
+    stake: '$50',
+    slots: makeWheel(15, [
+      [1, 5],
+      [4, 2],
+      [7, 0],
+      [10, 7],
+      [13, 3],
+    ]),
+  },
+  {
+    jackpot: '159,880',
+    rounds: 1800,
+    stake: '$100',
+    slots: makeWheel(20, [
+      [2, 4],
+      [6, 1],
+      [10, 6],
+      [13, 3],
+      [17, 0],
+    ]),
+  },
+  {
+    jackpot: '189,880',
+    rounds: 1800,
+    stake: '$200',
+    slots: makeWheel(7, [
+      [0, 0],
+      [2, 5],
+      [4, 2],
+    ]),
+  },
 ];
 
 export default function DashboardMain() {
   return (
     <main className="scroll-thin relative flex-1 overflow-y-auto px-6 py-6">
-      <TopBar />
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {wheels.map((w, i) => (
           <WheelCard key={i} {...w} />
@@ -37,48 +102,8 @@ export default function DashboardMain() {
   );
 }
 
-function TopBar() {
-  return (
-    <div className="mb-6 flex flex-col gap-3 px-1 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
-      <div>
-        <div className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.32em] text-cyan-300/90">
-          <Disc3 size={14} className="text-neon" />
-          WHEELS LOBBY
-        </div>
-        <h1 className="mt-1 font-display text-2xl font-extrabold tracking-wide text-white sm:text-3xl">
-          Choose your <span className="gold-text">jackpot</span>
-        </h1>
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-xs text-slate-300">
-          <Search size={14} className="text-slate-400" />
-          <input
-            placeholder="Search wheels..."
-            className="w-32 bg-transparent outline-none placeholder:text-slate-500 sm:w-40"
-          />
-        </div>
-        <button
-          aria-label="Notifications"
-          className="hidden h-9 w-9 place-items-center rounded-xl border border-white/8 bg-white/[0.03] text-slate-300 hover:text-white sm:grid"
-        >
-          <Bell size={15} />
-        </button>
-        <button
-          aria-label="Sound"
-          className="hidden h-9 w-9 place-items-center rounded-xl border border-white/8 bg-white/[0.03] text-slate-300 hover:text-white sm:grid"
-        >
-          <Volume2 size={15} />
-        </button>
-        <div className="hidden items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/5 px-3 py-1.5 text-[11px] font-semibold text-emerald-300 lg:flex">
-          <ShieldCheck size={14} />
-          On-Chain · Verified
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function WheelCard({ jackpot, rounds, stake, slices }) {
+function WheelCard({ jackpot, rounds, stake, slots }) {
+  const slices = slots.length;
   return (
     <div className="card-neon group overflow-hidden rounded-2xl p-4">
       {/* Cyan JACKPOT header */}
@@ -94,7 +119,7 @@ function WheelCard({ jackpot, rounds, stake, slices }) {
 
       {/* Wheel */}
       <div className="my-4 flex items-center justify-center">
-        <Wheel size={180} slices={slices} spin />
+        <Wheel size={180} slots={slots} spin />
       </div>
 
       {/* 2-column stats with divider */}
