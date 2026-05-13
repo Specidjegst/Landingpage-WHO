@@ -1,12 +1,39 @@
-export default function Wheel({ size = 168, slices = 16, spin = true, showPointer = true }) {
+const SLICE_COLORS = [
+  '#a855f7', // purple (top-right)
+  '#2563eb', // blue
+  '#22d3ee', // cyan
+  '#a3e635', // lime
+  '#facc15', // yellow
+  '#f97316', // orange
+  '#ef4444', // red
+  '#ef4444', // red (top-left)
+];
+
+export default function Wheel({
+  size = 168,
+  slices = SLICE_COLORS.length,
+  spin = false,
+  showPointer = false,
+  colors = SLICE_COLORS,
+}) {
   const sliceAngle = 360 / slices;
+  // Build conic-gradient from colors so the boundary sits cleanly at 12 o'clock
+  const stops = colors
+    .map((c, i) => {
+      const from = (i * sliceAngle).toFixed(3);
+      const to = ((i + 1) * sliceAngle).toFixed(3);
+      return `${c} ${from}deg ${to}deg`;
+    })
+    .join(', ');
+  const wheelStyle = { background: `conic-gradient(from 0deg, ${stops})` };
+
   return (
     <div
       className="relative shrink-0"
       style={{ width: size, height: size }}
       aria-hidden
     >
-      {/* Warm gold ambient glow (matches reference) */}
+      {/* Warm gold ambient glow */}
       <div
         className="absolute -inset-6 rounded-full blur-3xl opacity-70"
         style={{
@@ -22,7 +49,7 @@ export default function Wheel({ size = 168, slices = 16, spin = true, showPointe
       <div
         className="absolute rounded-full"
         style={{
-          inset: '5%',
+          inset: '6%',
           boxShadow:
             'inset 0 0 0 2px rgba(58, 37, 16, 0.55), inset 0 4px 10px rgba(0,0,0,0.35)',
         }}
@@ -31,21 +58,24 @@ export default function Wheel({ size = 168, slices = 16, spin = true, showPointe
       {/* Spinning ring: colored wheel + slice dots */}
       <div
         className={`absolute rounded-full ${spin ? 'animate-spin-slower' : ''}`}
-        style={{ inset: '7%', transformOrigin: '50% 50%' }}
+        style={{ inset: '8%', transformOrigin: '50% 50%' }}
       >
-        <div className="absolute inset-0 rounded-full wheel shadow-[inset_0_0_24px_rgba(0,0,0,0.4)]" />
-        {/* Subtle dark seams between slices */}
+        <div
+          className="absolute inset-0 rounded-full shadow-[inset_0_0_24px_rgba(0,0,0,0.35)]"
+          style={wheelStyle}
+        />
+        {/* Dark seams between slices */}
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background: `repeating-conic-gradient(from 0deg, rgba(0,0,0,0.30) 0deg 0.4deg, transparent 0.4deg ${sliceAngle}deg)`,
+            background: `repeating-conic-gradient(from 0deg, rgba(0,0,0,0.55) 0deg 0.5deg, transparent 0.5deg ${sliceAngle}deg)`,
           }}
         />
-        {/* White dots in slice centers */}
+        {/* White dot in slice centers */}
         {Array.from({ length: slices }).map((_, i) => {
           const angle = (i + 0.5) * sliceAngle;
-          const dotSize = size * 0.062;
-          const radius = size * 0.295;
+          const dotSize = size * 0.085;
+          const radius = size * 0.28;
           return (
             <span
               key={i}
@@ -64,11 +94,11 @@ export default function Wheel({ size = 168, slices = 16, spin = true, showPointe
         })}
       </div>
 
-      {/* Studs on the gold rim */}
+      {/* Studs on the gold rim — only ~10 like the reference */}
       <div className="pointer-events-none absolute inset-0">
-        {Array.from({ length: 24 }).map((_, i) => {
-          const angle = (i * 360) / 24;
-          const studSize = size * 0.022;
+        {Array.from({ length: 10 }).map((_, i) => {
+          const angle = (i * 360) / 10;
+          const studSize = size * 0.018;
           return (
             <span
               key={i}
@@ -77,11 +107,10 @@ export default function Wheel({ size = 168, slices = 16, spin = true, showPointe
                 width: studSize,
                 height: studSize,
                 background:
-                  'radial-gradient(circle at 35% 30%, #ffffff 0%, #fde68a 45%, #b45309 100%)',
-                boxShadow:
-                  '0 0 5px rgba(255, 225, 150, 0.85), inset 0 -1px 1px rgba(0,0,0,0.35)',
+                  'radial-gradient(circle at 35% 30%, #d2691e 0%, #8b4513 60%, #5b2c0d 100%)',
+                boxShadow: 'inset 0 -1px 1px rgba(0,0,0,0.5)',
                 transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${
-                  size * 0.455
+                  size * 0.46
                 }px)`,
               }}
             />
@@ -89,35 +118,52 @@ export default function Wheel({ size = 168, slices = 16, spin = true, showPointe
         })}
       </div>
 
-      {/* Center hub — solid orange-gold (matches reference) */}
+      {/* Center hub — solid orange-gold disc with pressed text */}
       <div
         className="absolute flex items-center justify-center rounded-full"
         style={{
-          inset: '31%',
+          inset: '32%',
           background:
-            'radial-gradient(circle at 30% 25%, #fef3c7 0%, #fbbf24 35%, #b45309 100%)',
+            'radial-gradient(circle at 30% 25%, #f4d18a 0%, #e0a04d 40%, #a36523 100%)',
           boxShadow:
-            'inset 0 2px 8px rgba(255, 255, 255, 0.5), inset 0 -3px 8px rgba(0, 0, 0, 0.45), 0 4px 18px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.35)',
-          border: '1.5px solid rgba(180, 83, 9, 0.85)',
+            'inset 0 2px 8px rgba(255, 255, 255, 0.45), inset 0 -3px 8px rgba(0, 0, 0, 0.45), 0 4px 18px rgba(0, 0, 0, 0.55), 0 0 24px rgba(245, 158, 11, 0.30)',
+          border: '1.5px solid rgba(120, 70, 20, 0.85)',
         }}
       >
-        <div className="text-center px-1 leading-none">
+        <div className="text-center px-1 leading-[1.05]">
           <div
-            className="font-display font-extrabold tracking-[0.18em] text-[#2a1a04]"
-            style={{ fontSize: size * 0.09 }}
+            className="font-display font-extrabold tracking-[0.08em] text-[#3a1f04]"
+            style={{
+              fontSize: size * 0.105,
+              textShadow:
+                '0 1px 0 rgba(255,255,255,0.35), 0 -1px 0 rgba(0,0,0,0.35)',
+            }}
           >
             WHEEL
           </div>
           <div
-            className="font-display font-bold tracking-[0.22em] text-[#4a2c07] mt-0.5"
-            style={{ fontSize: size * 0.062 }}
+            className="mx-auto my-0.5 grid place-items-center"
+            style={{
+              width: size * 0.075,
+              height: size * 0.075,
+            }}
           >
-            OF FOMO
+            <CenterIcon size={size * 0.075} />
+          </div>
+          <div
+            className="font-display font-extrabold tracking-[0.08em] text-[#3a1f04]"
+            style={{
+              fontSize: size * 0.105,
+              textShadow:
+                '0 1px 0 rgba(255,255,255,0.35), 0 -1px 0 rgba(0,0,0,0.35)',
+            }}
+          >
+            FOMO
           </div>
         </div>
       </div>
 
-      {/* Top pointer */}
+      {/* Top pointer (optional) */}
       {showPointer && (
         <div
           className="absolute left-1/2 -translate-x-1/2 z-20"
@@ -134,5 +180,46 @@ export default function Wheel({ size = 168, slices = 16, spin = true, showPointe
         </div>
       )}
     </div>
+  );
+}
+
+function CenterIcon({ size }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      style={{ filter: 'drop-shadow(0 1px 0 rgba(255,255,255,0.35))' }}
+    >
+      <circle
+        cx="10"
+        cy="10"
+        r="8"
+        stroke="#3a1f04"
+        strokeWidth="1.6"
+        fill="none"
+      />
+      <circle cx="10" cy="10" r="1.6" fill="#3a1f04" />
+      {Array.from({ length: 8 }).map((_, i) => {
+        const angle = (i * Math.PI * 2) / 8;
+        const x1 = 10 + Math.cos(angle) * 3;
+        const y1 = 10 + Math.sin(angle) * 3;
+        const x2 = 10 + Math.cos(angle) * 7;
+        const y2 = 10 + Math.sin(angle) * 7;
+        return (
+          <line
+            key={i}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            stroke="#3a1f04"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
+        );
+      })}
+    </svg>
   );
 }

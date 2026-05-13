@@ -160,7 +160,7 @@ function WheelCard({ jackpot, stake, slices, players, capacity, status, tag }) {
 
       {/* Wheel */}
       <div className="my-5 flex items-center justify-center">
-        <Wheel size={180} />
+        <Wheel size={180} spin />
       </div>
 
       {/* Stats grid */}

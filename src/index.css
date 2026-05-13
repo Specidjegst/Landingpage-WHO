@@ -254,34 +254,26 @@ body {
   text-shadow: 0 0 14px rgba(0, 245, 255, 0.6), 0 0 2px rgba(0, 245, 255, 0.9);
 }
 
-/* ---------- Wheel ---------- */
+/* ---------- Wheel (8-slice palette matching reference) ---------- */
 .wheel {
   background: conic-gradient(
     from 0deg,
-    #ef4444 0deg 22.5deg,
-    #facc15 22.5deg 45deg,
-    #14b8a6 45deg 67.5deg,
-    #f97316 67.5deg 90deg,
-    #a855f7 90deg 112.5deg,
-    #facc15 112.5deg 135deg,
-    #ef4444 135deg 157.5deg,
-    #22c55e 157.5deg 180deg,
-    #ef4444 180deg 202.5deg,
-    #facc15 202.5deg 225deg,
-    #f97316 225deg 247.5deg,
-    #14b8a6 247.5deg 270deg,
-    #ef4444 270deg 292.5deg,
-    #22c55e 292.5deg 315deg,
-    #a855f7 315deg 337.5deg,
-    #facc15 337.5deg 360deg
+    #a855f7 0deg 45deg,
+    #2563eb 45deg 90deg,
+    #22d3ee 90deg 135deg,
+    #a3e635 135deg 180deg,
+    #facc15 180deg 225deg,
+    #f97316 225deg 270deg,
+    #ef4444 270deg 315deg,
+    #ef4444 315deg 360deg
   );
 }
 
 .wheel-divider {
   background: repeating-conic-gradient(
     from 0deg,
-    rgba(0, 0, 0, 0.35) 0deg 0.6deg,
-    transparent 0.6deg 22.5deg
+    rgba(0, 0, 0, 0.45) 0deg 0.6deg,
+    transparent 0.6deg 45deg
   );
 }
 

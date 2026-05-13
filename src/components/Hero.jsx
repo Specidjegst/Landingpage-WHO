@@ -169,7 +169,7 @@ function HeroVisual() {
 
       {/* Wheel */}
       <div className="relative">
-        <Wheel size={400} />
+        <Wheel size={400} spin />
       </div>
 
       {/* Floating live-round card */}
