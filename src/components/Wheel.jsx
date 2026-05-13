@@ -21,10 +21,6 @@ export default function Wheel({
     })
     .join(', ');
   const wheelStyle = { background: `conic-gradient(from 0deg, ${stops})` };
-  const radius = size * 0.29;
-  const sliceArc = (Math.PI * 2 * radius) / slices;
-  const dotSize = Math.min(size * 0.07, sliceArc * 0.55);
-  const showDots = dotSize >= 3;
 
   return (
     <div
@@ -54,7 +50,7 @@ export default function Wheel({
         }}
       />
 
-      {/* Spinning ring: slice fill + dots */}
+      {/* Spinning ring: slice fill only */}
       <div
         className={`absolute rounded-full ${spin ? 'animate-spin-slower' : ''}`}
         style={{ inset: '8.5%', transformOrigin: '50% 50%' }}
@@ -70,26 +66,6 @@ export default function Wheel({
             background: `repeating-conic-gradient(from 0deg, rgba(0,0,0,0.55) 0deg 0.5deg, transparent 0.5deg ${sliceAngle}deg)`,
           }}
         />
-        {/* White dot in each slice */}
-        {showDots &&
-          Array.from({ length: slices }).map((_, i) => {
-            const angle = (i + 0.5) * sliceAngle;
-            return (
-              <span
-                key={i}
-                className="absolute left-1/2 top-1/2 rounded-full"
-                style={{
-                  width: dotSize,
-                  height: dotSize,
-                  background:
-                    'radial-gradient(circle at 35% 30%, #ffffff 0%, #ffffff 60%, #d4d4d8 100%)',
-                  boxShadow:
-                    '0 1px 3px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(0,0,0,0.2)',
-                  transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${radius}px)`,
-                }}
-              />
-            );
-          })}
       </div>
 
       {/* Dark bronze studs on the gold rim */}
@@ -116,9 +92,9 @@ export default function Wheel({
         })}
       </div>
 
-      {/* Center hub — pressed amber disc with 4-line text (WHEEL / icon / OF / FOMO) */}
+      {/* Center hub — pressed amber disc with embossed gear icon */}
       <div
-        className="absolute flex flex-col items-center justify-center rounded-full"
+        className="absolute flex items-center justify-center rounded-full"
         style={{
           inset: '29%',
           background:
@@ -128,15 +104,12 @@ export default function Wheel({
           border: '1.5px solid rgba(120, 70, 20, 0.85)',
         }}
       >
-        <HubText size={size * 0.105}>WHEEL</HubText>
         <div
-          className="my-[1px] grid place-items-center"
-          style={{ width: size * 0.065, height: size * 0.065 }}
+          className="grid place-items-center"
+          style={{ width: size * 0.22, height: size * 0.22 }}
         >
-          <CenterGear size={size * 0.065} />
+          <CenterGear size={size * 0.22} />
         </div>
-        <HubText size={size * 0.07}>OF</HubText>
-        <HubText size={size * 0.105}>FOMO</HubText>
       </div>
 
       {/* Top pointer */}
@@ -155,22 +128,6 @@ export default function Wheel({
           />
         </div>
       )}
-    </div>
-  );
-}
-
-function HubText({ children, size }) {
-  return (
-    <div
-      className="font-display font-extrabold tracking-[0.06em] text-[#3a1f04]"
-      style={{
-        fontSize: size,
-        lineHeight: 1,
-        textShadow:
-          '0 1px 0 rgba(255,255,255,0.4), 0 -1px 0 rgba(0,0,0,0.4)',
-      }}
-    >
-      {children}
     </div>
   );
 }
