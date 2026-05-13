@@ -29,58 +29,58 @@ function useTilt(max = 7) {
 
 const wheels = [
   {
-    jackpot: '12,540',
+    jackpot: '30,000',
+    stake: 5,
+    slices: 25,
+    players: 18,
+    capacity: 25,
+    status: 'filling',
+    tag: 'Low Stake',
+  },
+  {
+    jackpot: '30,000',
+    stake: 10,
+    slices: 15,
+    players: 11,
+    capacity: 15,
+    status: 'filling',
+    tag: 'Low Stake',
+  },
+  {
+    jackpot: '30,000',
     stake: 25,
+    slices: 10,
+    players: 7,
+    capacity: 10,
+    status: 'live',
+    tag: 'Mid Stake',
+  },
+  {
+    jackpot: '30,000',
+    stake: 50,
     slices: 10,
     players: 8,
     capacity: 10,
     status: 'live',
-    tag: 'Degen Tier',
+    tag: 'Mid Stake',
   },
   {
-    jackpot: '6,800',
-    stake: 10,
-    slices: 15,
-    players: 9,
-    capacity: 15,
-    status: 'filling',
-    tag: 'Starter Round',
-  },
-  {
-    jackpot: '32,400',
+    jackpot: '30,000',
     stake: 100,
-    slices: 20,
-    players: 17,
-    capacity: 20,
-    status: 'ending',
-    tag: 'Whale Wheel',
-  },
-  {
-    jackpot: '4,250',
-    stake: 5,
     slices: 25,
-    players: 11,
+    players: 19,
     capacity: 25,
-    status: 'filling',
-    tag: 'Easy Entry',
-  },
-  {
-    jackpot: '18,900',
-    stake: 50,
-    slices: 12,
-    players: 6,
-    capacity: 12,
-    status: 'live',
-    tag: 'Pro League',
-  },
-  {
-    jackpot: '74,120',
-    stake: 200,
-    slices: 8,
-    players: 5,
-    capacity: 8,
     status: 'ending',
-    tag: 'Apex',
+    tag: 'High Stake',
+  },
+  {
+    jackpot: '30,000',
+    stake: 200,
+    slices: 7,
+    players: 5,
+    capacity: 7,
+    status: 'ending',
+    tag: 'High Stake',
   },
 ];
 
@@ -160,7 +160,7 @@ function WheelCard({ jackpot, stake, slices, players, capacity, status, tag }) {
 
       {/* Wheel */}
       <div className="my-5 flex items-center justify-center">
-        <Wheel size={180} spin />
+        <Wheel size={180} slices={slices} spin />
       </div>
 
       {/* Stats grid */}

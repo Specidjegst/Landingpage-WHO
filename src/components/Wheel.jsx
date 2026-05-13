@@ -17,15 +17,21 @@ export default function Wheel({
   colors = SLICE_COLORS,
 }) {
   const sliceAngle = 360 / slices;
-  // Build conic-gradient from colors so the boundary sits cleanly at 12 o'clock
-  const stops = colors
-    .map((c, i) => {
+  // Cycle the palette so any slice count (8, 10, 15, 25…) gets coloured
+  const stops = Array.from({ length: slices })
+    .map((_, i) => {
+      const c = colors[i % colors.length];
       const from = (i * sliceAngle).toFixed(3);
       const to = ((i + 1) * sliceAngle).toFixed(3);
       return `${c} ${from}deg ${to}deg`;
     })
     .join(', ');
   const wheelStyle = { background: `conic-gradient(from 0deg, ${stops})` };
+  // Scale the slice dots so they always fit inside the slice
+  const radius = size * 0.28;
+  const sliceArc = (Math.PI * 2 * radius) / slices;
+  const dotSize = Math.min(size * 0.085, sliceArc * 0.55);
+  const showDots = dotSize >= 3;
 
   return (
     <div
@@ -72,26 +78,25 @@ export default function Wheel({
           }}
         />
         {/* White dot in slice centers */}
-        {Array.from({ length: slices }).map((_, i) => {
-          const angle = (i + 0.5) * sliceAngle;
-          const dotSize = size * 0.085;
-          const radius = size * 0.28;
-          return (
-            <span
-              key={i}
-              className="absolute left-1/2 top-1/2 rounded-full"
-              style={{
-                width: dotSize,
-                height: dotSize,
-                background:
-                  'radial-gradient(circle at 35% 30%, #ffffff 0%, #ffffff 60%, #d4d4d8 100%)',
-                boxShadow:
-                  '0 1px 3px rgba(0,0,0,0.45), inset 0 -1px 2px rgba(0,0,0,0.20)',
-                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${radius}px)`,
-              }}
-            />
-          );
-        })}
+        {showDots &&
+          Array.from({ length: slices }).map((_, i) => {
+            const angle = (i + 0.5) * sliceAngle;
+            return (
+              <span
+                key={i}
+                className="absolute left-1/2 top-1/2 rounded-full"
+                style={{
+                  width: dotSize,
+                  height: dotSize,
+                  background:
+                    'radial-gradient(circle at 35% 30%, #ffffff 0%, #ffffff 60%, #d4d4d8 100%)',
+                  boxShadow:
+                    '0 1px 3px rgba(0,0,0,0.45), inset 0 -1px 2px rgba(0,0,0,0.20)',
+                  transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${radius}px)`,
+                }}
+              />
+            );
+          })}
       </div>
 
       {/* Studs on the gold rim — only ~10 like the reference */}
